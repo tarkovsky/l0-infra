@@ -12,5 +12,5 @@ FILE(GLOB_RECURSE all_files
 sort_files(all_files)
 
 add_executable(infra-test  ${all_files})
-target_link_libraries(infra-test infra gtest pthread)
+target_link_libraries(infra-test infra hamcrest magellan)
 
