@@ -1,8 +1,8 @@
-# Infra 
+# Infrastructure 
 
-Infra is a infrastructure for C/C++ framework.
+It's an infrastructure for universal C/C++ framework.
 
-* [Magellan Website](http://gitlab.com/horance/infra)
+* [Intrastructure](http://gitlab.com/horance/infrastructure)
 
 Supported Platform:
 * [MAC OS X] supported
@@ -14,8 +14,9 @@ Supported Compilers:
 * [GCC] 4.9 or later.
 * [MSVC] not supported.
 
-Dependces:
-* [Google Test](http://code.google.com/p/googletest/) 1.6 or later.
+Dependces for test cases:
+* [Hamcrest](http://gitlab.com/horance/hamcrest).
+* [Magellan](http://gitlab.com/horance/magellan).
 
 ## Installation
 
@@ -29,32 +30,41 @@ In order to support full C++11/14 features, to update GCC to 4.9 or later.
     sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.9
     sudo update-alternatives --config gcc
 
-### Install dependces:
-
-#### Install CMake:
+### Install CMake:
 
     sudo apt-get install cmake
   
-#### Install Google Test dependces:
+### Install Infrastructure
 
-    sudo apt-get install google-mock
-    cd /usr/src/gmock/gtest
-    sudo mkdir build
+    mkdir build
     cd build
-    sudo cmake ..
-    sudo make
-    sudo mv libg* /usr/local/lib/ 
-    cd ..
-    sudo cp -aR include/gtest/ /usr/local/include/
-    sudo ldconfig
+    cmake ..
+    make ..
+    sudo make install
 
-### Build and Install Magellan:
+### Install Hamcrest
 
+    git clone https://gitlab.com/horance/hamcrest.git
+    cd hamcrest
     mkdir build
     cd build
     cmake ..
     make
     sudo make install
+
+### Install Magellan:
+
+    git clone https://gitlab.com/horance/magellan.git
+    cd magellan
+    mkdir build
+    cd build
+    cmake ..
+    make
+    sudo make install
+
+### NOTE
+
+You can run build.sh only if hamcrest and magellan installed.
 
 ## Copyright
 Copyright (c) 2015-2020 Horance Liu. See LICENSE for details.
