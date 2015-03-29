@@ -11,7 +11,7 @@ if [ ! -d "build" ]; then
 fi
 
 cd build
-cmake -DCMAKE_BUILD_TYPE=Debug ..
+cmake -DCMAKE_BUILD_TYPE=Debug -DINFRA_ENABLE_TEST=ON ..
 
 # execute cmake when you using colorgcc
 # CC="colorgcc /usr/bin/gcc" CXX="colorgcc /usr/bin/g++" cmake -DCMAKE_BUILD_TYPE=Debug ..
