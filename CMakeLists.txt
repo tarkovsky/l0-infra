@@ -46,7 +46,4 @@ include_directories(${INFRA_INCLUDE_DIR})
 install(DIRECTORY include/l0-infra DESTINATION include)
 
 add_subdirectory(src)
-
-if(INFRA_ENABLE_TEST)
-    add_subdirectory(test)
-endif()
+add_subdirectory(test)
