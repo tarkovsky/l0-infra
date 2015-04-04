@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project(infrastructure)
 
-set(INFRA_ENABLE_TEST OFF CACHE BOOL "Enable the test")
+#set(INFRA_ENABLE_TEST OFF CACHE BOOL "Enable the test")
 
 #
 # File Filter
