@@ -14,20 +14,10 @@ Supported Compilers:
 * [GCC] 4.9 or later.
 * [MSVC] not supported.
 
-Dependces for test cases:
+Dependences for test cases:
 * [Magellan](http://gitlab.com/horance/magellan).
 
 ## Installation
-
-### Update GCC to 4.9
-
-In order to support full C++11/14 features, to update GCC to 4.9 or later.
-
-    sudo -E add-apt-repository ppa:ubuntu-toolchain-r/test
-    sudo apt-get update
-    sudo apt-get install gcc-4.9 g++-4.9
-    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.9
-    sudo update-alternatives --config gcc
 
 ### Install CMake:
 
@@ -59,6 +49,10 @@ In order to support full C++11/14 features, to update GCC to 4.9 or later.
     cmake -DENABLE_TEST=on ..
     make
     test/l0-infra-test    
+
+### l0-infra Developer
+
+TO see [MDK](https://gitloab.com/horance/mdk) README for details.
 
 ## Copyright
 Copyright (c) 2015-2020 Horance Liu. See LICENSE for details.
