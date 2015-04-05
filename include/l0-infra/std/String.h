@@ -3,6 +3,8 @@
 
 #include <l0-infra/std/TypeName.h>
 #include <sstream>
+#include <stdexcept>
+#include <stddef.h>
 
 STDEXT_NS_BEGIN
 
