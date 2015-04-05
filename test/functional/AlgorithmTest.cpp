@@ -31,7 +31,7 @@ FIXTURE(AlgorithmTest)
 
     TEST("find_if support non const container")
     {
-        auto found = stdext::find_if(v1, [](auto e) { return e > 0; });
+        auto found = stdext::find_if(v1, [](int e) { return e > 0; });
 
         STATIC_ASSERT_TYPE(std::vector<int>::iterator, found);
         ASSERT_THAT(*found, is(3));
@@ -39,7 +39,7 @@ FIXTURE(AlgorithmTest)
 
     TEST("find_if support const container")
     {
-        auto found = stdext::find_if(v2, [](auto e) { return e > 0; });
+        auto found = stdext::find_if(v2, [](int e) { return e > 0; });
 
         STATIC_ASSERT_TYPE(std::vector<int>::const_iterator, found);
         ASSERT_THAT(*found, is(3));
@@ -48,7 +48,7 @@ FIXTURE(AlgorithmTest)
     TEST("map")
     {
         std::vector<int> v;
-        stdext::map(v1, std::back_inserter(v), [](auto e) { return e > 0 ? e : -e; });
+        stdext::map(v1, std::back_inserter(v), [](int e) { return e > 0 ? e : -e; });
 
         ASSERT_THAT(v[0], is(1));
         ASSERT_THAT(v[1], is(2));
@@ -58,7 +58,7 @@ FIXTURE(AlgorithmTest)
 
     TEST("reduce")
     {
-        auto sum = stdext::reduce(arr, 0, [](auto& sum, auto e) { sum += e; });
+        auto sum = stdext::reduce(arr, 0, [](int& sum, int e) { sum += e; });
 
         ASSERT_THAT(sum, is(4));
     }
@@ -66,7 +66,7 @@ FIXTURE(AlgorithmTest)
     TEST("filter")
     {
         std::vector<int> v;
-        stdext::filter(arr, std::back_inserter(v), [](auto e) { return e > 0; });
+        stdext::filter(arr, std::back_inserter(v), [](int e) { return e > 0; });
 
         ASSERT_THAT(v[0], is(3));
         ASSERT_THAT(v[1], is(4));
@@ -75,7 +75,7 @@ FIXTURE(AlgorithmTest)
     TEST("each")
     {
         auto sum = 0;
-        stdext::each(arr, [&sum](auto e) { sum += e; });
+        stdext::each(arr, [&sum](int e) { sum += e; });
 
         ASSERT_THAT(sum, is(4));
     }
