@@ -40,6 +40,7 @@ In order to support full C++11/14 features, to update GCC to 4.9 or later.
     cmake ..
     make ..
     sudo make install
+    sudo ldconfig
 
 ### Install Magellan:
 
@@ -50,6 +51,14 @@ In order to support full C++11/14 features, to update GCC to 4.9 or later.
     cmake ..
     make
     sudo make install
+    sudo ldconfig
+
+### Test l0-infra
+
+    cd build
+    cmake -DENABLE_TEST=on ..
+    make
+    test/l0-infra-test    
 
 ## Copyright
 Copyright (c) 2015-2020 Horance Liu. See LICENSE for details.
