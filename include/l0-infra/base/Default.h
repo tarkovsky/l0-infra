@@ -3,29 +3,40 @@
 
 namespace details
 {
-   template <typename T>
-   struct DefaultValue
-   {
-      static T value() { return T(); }
-   };
+    template<typename T>
+    struct DefaultValue
+    {
+        static T value()
+        {
+            return T();
+        }
+    };
 
-   template <typename T>
-   struct DefaultValue<T*>
-   {
-       static T* value() { return nullptr; }
-   };
+    template<typename T>
+    struct DefaultValue<T*>
+    {
+        static T* value()
+        {
+            return nullptr;
+        }
+    };
 
-   template <typename T>
-   struct DefaultValue<const T*>
-   {
-       static T* value() { return nullptr; }
-   };
+    template<typename T>
+    struct DefaultValue<const T*>
+    {
+        static T* value()
+        {
+            return nullptr;
+        }
+    };
 
-   template <>
-   struct DefaultValue<void>
-   {
-      static void value() {}
-   };
+    template<>
+    struct DefaultValue<void>
+    {
+        static void value()
+        {
+        }
+    };
 }
 
 #define DEFAULT(type, method)  \

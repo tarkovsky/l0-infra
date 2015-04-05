@@ -12,7 +12,7 @@ std::string getDemangledName(const std::type_info& typeInfo);
 
 ///////////////////////////////////////////////////////////////
 template<typename T>
-struct TypeString
+struct TypeName
 {
     static std::string value()
     {
@@ -22,14 +22,14 @@ struct TypeString
 
 ///////////////////////////////////////////////////////////////
 template<>
-struct TypeString<std::string>
+struct TypeName<std::string>
 {
     static std::string value() { return "std::string"; }
 };
 
 ///////////////////////////////////////////////////////////////
 template<>
-struct TypeString<std::nullptr_t>
+struct TypeName<std::nullptr_t>
 {
     static std::string value() { return "std::nullptr_t"; }
 };

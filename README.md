@@ -1,8 +1,8 @@
-# Infrastructure 
+# l0-infra
 
 It's an infrastructure for universal C/C++ framework.
 
-* [Intrastructure](http://gitlab.com/horance/infrastructure)
+* [l0-infra](http://gitlab.com/horance/l0-infra)
 
 Supported Platform:
 * [MAC OS X] supported
@@ -15,7 +15,6 @@ Supported Compilers:
 * [MSVC] not supported.
 
 Dependces for test cases:
-* [Hamcrest](http://gitlab.com/horance/hamcrest).
 * [Magellan](http://gitlab.com/horance/magellan).
 
 ## Installation
@@ -34,22 +33,12 @@ In order to support full C++11/14 features, to update GCC to 4.9 or later.
 
     sudo apt-get install cmake
   
-### Install Infrastructure
+### Install l0-infra 
 
     mkdir build
     cd build
     cmake ..
     make ..
-    sudo make install
-
-### Install Hamcrest
-
-    git clone https://gitlab.com/horance/hamcrest.git
-    cd hamcrest
-    mkdir build
-    cd build
-    cmake ..
-    make
     sudo make install
 
 ### Install Magellan:

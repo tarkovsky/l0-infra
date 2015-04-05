@@ -1,4 +1,4 @@
-#include <l0-infra/std/TypeString.h>
+#include <l0-infra/std/TypeName.h>
 
 #if defined(__GNUC__)
 #include <cxxabi.h>

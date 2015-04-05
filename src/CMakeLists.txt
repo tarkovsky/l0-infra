@@ -7,5 +7,5 @@ FILE(GLOB_RECURSE all_files
 
 sort_files(all_files)
 
-add_library(infra STATIC ${all_files})
-install(TARGETS infra ARCHIVE DESTINATION lib)
+add_library(l0-infra STATIC ${all_files})
+install(TARGETS l0-infra ARCHIVE DESTINATION lib)

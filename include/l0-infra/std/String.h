@@ -1,9 +1,8 @@
-#ifndef HEA317698_FEF8_4B1B_AD3F_588C6A38F382
-#define HEA317698_FEF8_4B1B_AD3F_588C6A38F382
+#ifndef SFLJSFA_CLJKSWOR_DASOIWU_47561_CBASDUYW
+#define SFLJSFA_CLJKSWOR_DASOIWU_47561_CBASDUYW
 
-#include <l0-infra/std/stdext.h>
+#include <l0-infra/std/TypeName.h>
 #include <sstream>
-#include <stdexcept>
 
 STDEXT_NS_BEGIN
 
@@ -37,12 +36,56 @@ inline std::string string_as(const std::string& s)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-template<typename T>
-std::string to_string(T arg)
+std::string toBufferString(void* buf, size_t size);
+std::string toPointerString(void* buf);
+
+////////////////////////////////////////////////////////////////////////////////
+template <typename T>
+std::string toString(const T& val)
 {
-    std::stringstream s;
-    s << arg;
-    return s.str();
+    return toBufferString((void*)&val, sizeof(val));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+template <typename T>
+std::string toString(T* p)
+{
+    return toPointerString((void*)p);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+template <typename T>
+std::string toString(const T* s)
+{
+    return toPointerString((void*)s);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+std::string toString(const std::string& s);
+std::string toString(const std::nullptr_t& p);
+std::string toString(char* s);
+std::string toString(const char* s);
+std::string toString(float f);
+std::string toString(double d);
+std::string toString(long double d);
+std::string toString(bool b);
+std::string toString(char c);
+std::string toString(signed char c);
+std::string toString(unsigned char c);
+std::string toString(short s);
+std::string toString(unsigned short s);
+std::string toString(int i);
+std::string toString(unsigned int i);
+std::string toString(long l);
+std::string toString(unsigned long l);
+
+////////////////////////////////////////////////////////////////////////////////
+template <typename T>
+std::string toTypeAndValueString(const T& val)
+{
+    std::stringstream oss;
+    oss << toString(val) << ": " << TypeName<T>::value();
+    return oss.str();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,10 +96,6 @@ std::string to_lower(const std::string& str);
 std::string trim(const std::string& str);
 std::string ltrim(const std::string& str);
 std::string rtrim(const std::string& str);
-
-////////////////////////////////////////////////////////////////////////////////
-#define __DO_STRINGIZE( symbol ) #symbol
-#define STRINGIZE(symbol) __DO_STRINGIZE(symbol)
 
 STDEXT_NS_END
 

@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(infrastructure)
+project(l0-infra)
 
-#set(INFRA_ENABLE_TEST OFF CACHE BOOL "Enable the test")
+set(ENABLE_TEST OFF CACHE BOOL "Enable the test")
 
 #
 # File Filter
@@ -46,4 +46,7 @@ include_directories(${INFRA_INCLUDE_DIR})
 install(DIRECTORY include/l0-infra DESTINATION include)
 
 add_subdirectory(src)
-add_subdirectory(test)
+
+if(ENABLE_TEST)
+  add_subdirectory(test)
+endif()

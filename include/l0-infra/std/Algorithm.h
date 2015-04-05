@@ -65,13 +65,6 @@ inline OutputIterator filter(Container&& c, OutputIterator result, Predicate pre
     return details::do_filter(RANG(c), result, pred);
 }
 
-template <typename Container>
-void clear(Container&& c)
-{
-    each(c, [](auto e) { delete e; });
-    c.clear();
-}
-
 namespace details
 {
     template <typename Iterator>

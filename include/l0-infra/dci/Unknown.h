@@ -2,7 +2,7 @@
 #define OIWUEROIUERT_NBNMCMBVM_SKADHJSKJF_CBZJGHWQOSCKAG
 
 #include "l0-infra/dci/InterfaceDef.h"
-#include "l0-infra/base/Role.h"
+#include "l0-infra/dci/Role.h"
 
 namespace dci
 {
