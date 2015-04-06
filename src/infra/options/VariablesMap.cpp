@@ -60,26 +60,6 @@ namespace  options {
         }
 
         map.m_final.insert(new_final.begin(), new_final.end());
-
-        // Second, apply default values and store required options.
-        const vector<std::shared_ptr<OptionDescription> >& all = desc.options();
-        for(auto var : all)
-        {
-            const OptionDescription& d = *var;
-            string key = d.getKey("");
-            if (key.empty())
-            {
-                continue;
-            }
-            if (m.count(key) == 0) {
-            
-                Any def;
-                if (d.semantic()->apply_default(def)) {
-                    m[key] = VariableValue(def, true);
-                    m[key].m_value_semantic = d.semantic();
-                }
-            }  
-        }
     }
      
     AbstractVariablesMap::AbstractVariablesMap()

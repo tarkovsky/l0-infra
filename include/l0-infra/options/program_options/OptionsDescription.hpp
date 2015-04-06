@@ -71,31 +71,16 @@ namespace options {
 
     struct OptionsDescription
     {
-        OptionsDescription(unsigned line_length = default_line_length,
-                            unsigned min_description_length = default_line_length / 2);
+        OptionsDescription();
+        OptionsDescription(const std::string& caption);
 
-        OptionsDescription(const std::string& caption,
-                            unsigned line_length = default_line_length,
-                            unsigned min_description_length = default_line_length / 2);
         DescriptionInit add_options();
         void add(std::shared_ptr<OptionDescription> desc);
-        OptionsDescription& add(const OptionsDescription& desc);
-
-        unsigned get_option_column_width() const;
-
 
         const OptionDescription* find(const std::string& name,
-                                       bool approx, 
-                                       bool long_ignore_case = false,
-                                       bool short_ignore_case = false) const;
-
-        const OptionDescription* find_nothrow(const std::string& name,
                                                bool approx,
                                                bool long_ignore_case = false,
                                                bool short_ignore_case = false) const;
-
-
-        const std::vector< std::shared_ptr<OptionDescription> >& options() const;
 
         friend std::ostream& operator<<(std::ostream& os, 
                                              const OptionsDescription& desc);
@@ -103,22 +88,11 @@ namespace options {
         void print(std::ostream& os, unsigned width = 0) const;
 
     private:
-        typedef std::map<std::string, int>::const_iterator name2index_iterator;
-        typedef std::pair<name2index_iterator, name2index_iterator> 
-            approximation_range;
-
         enum { default_line_length = 80};
 
         std::string m_caption;
-        const unsigned m_line_length;
-        const unsigned m_min_description_length;
 
         std::vector< std::shared_ptr<OptionDescription> > m_options;
-
-        std::vector<bool> belong_to_group;
-
-        std::vector< std::shared_ptr<OptionsDescription> > groups;
-
     };
 }
 

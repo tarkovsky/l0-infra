@@ -204,69 +204,27 @@ namespace options {
         return *this;
     }
 
-    OptionsDescription::OptionsDescription(unsigned line_length,
-                                             unsigned min_description_length)
-    : m_line_length(line_length)
-    , m_min_description_length(min_description_length)
+    OptionsDescription::OptionsDescription()
     {
-        assert(m_min_description_length < m_line_length - 1);    
     }
 
-    OptionsDescription::OptionsDescription(const std::string& caption,
-                                             unsigned line_length,
-                                             unsigned min_description_length)
+    OptionsDescription::OptionsDescription(const std::string& caption)
     : m_caption(caption)
-    , m_line_length(line_length)
-    , m_min_description_length(min_description_length)
     {
-        assert(m_min_description_length < m_line_length - 1);
+
     }
     
-    void
-    OptionsDescription::add(std::shared_ptr<OptionDescription> desc)
+    void OptionsDescription::add(std::shared_ptr<OptionDescription> desc)
     {
         m_options.push_back(desc);
-        belong_to_group.push_back(false);
     }
 
-    OptionsDescription&
-    OptionsDescription::add(const OptionsDescription& desc)
-    {
-        std::shared_ptr<OptionsDescription> d(new OptionsDescription(desc));
-        groups.push_back(d);
-
-        for (size_t i = 0; i < desc.m_options.size(); ++i) {
-            add(desc.m_options[i]);
-            belong_to_group.back() = true;
-        }
-
-        return *this;
-    }
-
-    DescriptionInit
-    OptionsDescription::add_options()
+    DescriptionInit OptionsDescription::add_options()
     {       
         return DescriptionInit(this);
     }
 
-    const OptionDescription*
-    OptionsDescription::find(const std::string& name, 
-                              bool approx,
-                              bool long_ignore_case,
-                              bool short_ignore_case) const
-    {
-        return find_nothrow(name, approx,
-                                       long_ignore_case, short_ignore_case);
-    }
-
-    const std::vector< std::shared_ptr<OptionDescription> >& 
-    OptionsDescription::options() const
-    {
-        return m_options;
-    }
-
-    const OptionDescription*
-    OptionsDescription::find_nothrow(const std::string& name, 
+    const OptionDescription* OptionsDescription::find(const std::string& name,
                                       bool approx,
                                       bool long_ignore_case,
                                       bool short_ignore_case) const
@@ -276,36 +234,33 @@ namespace options {
         vector<string> approximate_matches;
         vector<string> full_matches;
         
-        for(unsigned i = 0; i < m_options.size(); ++i)
+        for(auto one : m_options)
         {
             OptionDescription::matchResult r = 
-                m_options[i]->match(name, approx, long_ignore_case, short_ignore_case);
+                one->match(name, approx, long_ignore_case, short_ignore_case);
 
             if (r == OptionDescription::no_match)
                 continue;
 
             if (r == OptionDescription::full_match)
             {                
-                full_matches.push_back(m_options[i]->getKey(name));
-                found = m_options[i];
+                full_matches.push_back(one->getKey(name));
+                found = one;
                 had_full_match = true;
             } 
             else 
             {                        
-                approximate_matches.push_back(m_options[i]->getKey(name));
+                approximate_matches.push_back(one->getKey(name));
                 if (!had_full_match)
-                    found = m_options[i];
+                    found = one;
             }
         }
-        if (full_matches.size() > 1) 
-            throw std::exception();
-        
-        if (full_matches.empty() && approximate_matches.size() > 1)
-            throw std::exception();
+        if (full_matches.size() > 1) return 0;
+
+        if (full_matches.empty() && approximate_matches.size() > 1) return 0;
 
         return found.get();
     }
-
     
     std::ostream& operator<<(std::ostream& os, const OptionsDescription& desc)
     {
@@ -411,23 +366,9 @@ namespace options {
             }          
         }                              
         
-        void format_description(std::ostream& os,
-                                const std::string& desc, 
-                                unsigned first_column_width,
-                                unsigned line_length)
-        {
-            assert(line_length > 1);
-            if (line_length > 1)
-            {
-                --line_length;
-            }
-
-            assert(line_length > first_column_width);
-
-        }
     
         void format_one(std::ostream& os, const OptionDescription& opt, 
-                        unsigned first_column_width, unsigned line_length)
+                        unsigned first_column_width)
         {
             stringstream ss;
             ss << "  " << opt.formatName() << ' ' << opt.formatParameter();
@@ -449,67 +390,26 @@ namespace options {
                       os.put(' ');
                    }
                 }
-            
-                format_description(os, opt.getDescription(),
-                                   first_column_width, line_length);
             }
         }
     }
 
-    unsigned                                                                    
-    OptionsDescription::get_option_column_width() const                                
-    {
-        /* Find the maximum width of the option column */
-        unsigned width(23);
-        unsigned i; // vc6 has broken for loop scoping
-        for (i = 0; i < m_options.size(); ++i)
-        {
-            const OptionDescription& opt = *m_options[i];
-            stringstream ss;
-            ss << "  " << opt.formatName() << ' ' << opt.formatParameter();
-            width = (max)(width, static_cast<unsigned>(ss.str().size()));            
-        }
-
-        /* Get width of groups as well*/
-        for (unsigned j = 0; j < groups.size(); ++j)                            
-            width = max(width, groups[j]->get_option_column_width());
-
-        /* this is the column were description should start, if first
-           column is longer, we go to a new line */
-        const unsigned start_of_description_column = m_line_length - m_min_description_length;
-
-        width = (min)(width, start_of_description_column-1);
-        
-        /* add an additional space to improve readability */
-        ++width;
-        return width;                                                       
-    }
-
-    void 
-    OptionsDescription::print(std::ostream& os, unsigned width) const
+    void OptionsDescription::print(std::ostream& os, unsigned width) const
     {
         if (!m_caption.empty())
             os << m_caption << ":\n";
 
         if (!width)
-            width = get_option_column_width();
+            width = default_line_length;
 
         /* The options formatting style is stolen from Subversion. */
         for (unsigned i = 0; i < m_options.size(); ++i)
         {
-            if (belong_to_group[i])
-                continue;
-
             const OptionDescription& opt = *m_options[i];
 
-            format_one(os, opt, width, m_line_length);
+            format_one(os, opt, width);
 
             os << "\n";
-        }
-
-        for (unsigned j = 0; j < groups.size(); ++j) {            
-            os << "\n";
-            groups[j]->print(os, width);
         }
     }
 
