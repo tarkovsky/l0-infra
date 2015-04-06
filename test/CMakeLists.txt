@@ -12,5 +12,5 @@ FILE(GLOB_RECURSE all_files
 sort_files(all_files)
 
 add_executable(l0-infra-test  ${all_files})
-target_link_libraries(l0-infra-test l0-infra magellan)
+target_link_libraries(l0-infra-test l0-infra  hamcrest magellan stdc++)
 

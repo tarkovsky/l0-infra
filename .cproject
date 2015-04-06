@@ -40,6 +40,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/hamcrest-cxx/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/infrastructure/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/magellan/include}&quot;"/>
+									<listOptionValue builtIn="false" value="/usr/local/include"/>
+									<listOptionValue builtIn="false" value="/usr/include"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1919296537" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
