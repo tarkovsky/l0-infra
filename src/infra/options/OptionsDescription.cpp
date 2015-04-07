@@ -27,7 +27,7 @@ namespace options {
     }
     
     OptionDescription::
-    OptionDescription(const char* name,
+    OptionDescription(const std::string& name,
                        const Value_semantic* s)
     : valueSemantic(s)
     {
@@ -36,9 +36,9 @@ namespace options {
                                            
 
     OptionDescription::
-    OptionDescription(const char* name,
-                       const Value_semantic* s,
-                       const char* description)
+    OptionDescription(const std::string& name,
+                      const Value_semantic* s,
+                      const std::string& description)
     : description(description), valueSemantic(s)
     {
         this->set_name(name);
@@ -117,9 +117,8 @@ namespace options {
     }
 
     OptionDescription&
-    OptionDescription::set_name(const char* _name)
+    OptionDescription::set_name(const std::string& name)
     {
-        std::string name(_name);
         string::size_type n = name.find(',');
         if (n != string::npos) {
             assert(n == name.size()-2);
@@ -172,8 +171,8 @@ namespace options {
 
     DescriptionInit&
     DescriptionInit::
-    operator()(const char* name,
-               const char* description)
+    operator()(const std::string& name,
+               const std::string& description)
     {
         std::shared_ptr<OptionDescription> d(
             new OptionDescription(name, new Untyped_value(true), description));
@@ -184,7 +183,7 @@ namespace options {
 
     DescriptionInit&
     DescriptionInit::
-    operator()(const char* name,
+    operator()(const std::string& name,
                const Value_semantic* s)
     {
         std::shared_ptr<OptionDescription> d(new OptionDescription(name, s));
@@ -194,9 +193,9 @@ namespace options {
 
     DescriptionInit&
     DescriptionInit::
-    operator()(const char* name,
+    operator()(const std::string& name,
                const Value_semantic* s,
-               const char* description)
+               const std::string& description)
     {
         std::shared_ptr<OptionDescription> d(new OptionDescription(name, s, description));
 

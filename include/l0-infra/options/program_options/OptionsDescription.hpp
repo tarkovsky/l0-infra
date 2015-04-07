@@ -14,12 +14,12 @@ namespace options {
 	{
         OptionDescription();
 
-        OptionDescription(const char* name,
+        OptionDescription(const std::string& name,
                            const Value_semantic* s);
 
-        OptionDescription(const char* name,
+        OptionDescription(const std::string& name,
                            const Value_semantic* s,
-                           const char* description);
+                           const std::string& description);
 
         enum matchResult { no_match, full_match, approximate_match };
 
@@ -40,7 +40,7 @@ namespace options {
 
     private:
     
-        OptionDescription& set_name(const char* name);
+        OptionDescription& set_name(const std::string& name);
 
         std::string shortName, longName, description;
         std::shared_ptr<const Value_semantic> valueSemantic;
@@ -52,17 +52,17 @@ namespace options {
         DescriptionInit(OptionsDescription* owner);
 
         DescriptionInit&
-        operator()(const char* name,
-                   const char* description);
+        operator()(const std::string& name,
+                   const std::string& description);
 
         DescriptionInit&
-        operator()(const char* name,
+        operator()(const std::string& name,
                    const Value_semantic* s);
         
         DescriptionInit&
-        operator()(const char* name,
+        operator()(const std::string& name,
                    const Value_semantic* s,
-                   const char* description);
+                   const std::string& description);
        
     private:
         OptionsDescription* owner;
