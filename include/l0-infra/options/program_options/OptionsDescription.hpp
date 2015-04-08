@@ -46,36 +46,12 @@ namespace options {
         std::shared_ptr<const Value_semantic> valueSemantic;
     };
 
-    struct  OptionsDescription;
-    struct  DescriptionInit {
-
-        DescriptionInit(OptionsDescription* owner);
-
-        DescriptionInit&
-        operator()(const std::string& name,
-                   const std::string& description);
-
-        DescriptionInit&
-        operator()(const std::string& name,
-                   const Value_semantic* s);
-        
-        DescriptionInit&
-        operator()(const std::string& name,
-                   const Value_semantic* s,
-                   const std::string& description);
-       
-    private:
-        OptionsDescription* owner;
-    };
-
-
     struct OptionsDescription
     {
         OptionsDescription();
         OptionsDescription(const std::string& caption);
 
-        DescriptionInit add_options();
-        void add(std::shared_ptr<OptionDescription> desc);
+        void add(std::map<std::string, std::string>&& args);
 
         const OptionDescription* find(const std::string& name,
                                                bool approx,

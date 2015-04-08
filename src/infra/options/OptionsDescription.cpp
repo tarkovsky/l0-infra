@@ -1,7 +1,8 @@
 #include "l0-infra/options/program_options/OptionsDescription.hpp"
 #include "l0-infra/options/program_options/Parsers.hpp"
-
+#include <algorithm>
 #include <cassert>
+#include <iterator>
 
 using namespace std;
 
@@ -50,22 +51,12 @@ namespace options {
                               bool long_ignore_case,
                               bool short_ignore_case) const
     {
-        matchResult result = no_match;        
+        auto result = no_match;        
         
         std::string local_long_name((long_ignore_case ? tolower_(longName) : longName));
-        
         if (!local_long_name.empty()) {
         
-            std::string local_option = (long_ignore_case ? tolower_(option) : option);
-
-            if (*local_long_name.rbegin() == '*')
-            {
-                // The name ends with '*'. Any specified name with the given
-                // prefix is OK.
-                if (local_option.find(local_long_name.substr(0, local_long_name.length()-1))
-                    == 0)
-                    result = approximate_match;
-            }
+            auto local_option = (long_ignore_case ? tolower_(option) : option);
 
             if (local_long_name == local_option)
             {
@@ -93,38 +84,30 @@ namespace options {
         return result;        
     }
 
-    const std::string& 
-    OptionDescription::getKey(const std::string& option) const
+    const std::string& OptionDescription::getKey(const std::string& option) const
     {        
         if (!longName.empty()) 
-            if (longName.find('*') != string::npos)
-                // The '*' character means we're long_name
-                // matches only part of the input. So, returning
-                // long name will remove some of the information,
-                // and we have to return the option as specified
-                // in the source.
-                return option;
-            else
-                return longName;
+            return longName;
         else
             return shortName;
     }
 
-    const std::string&
-    OptionDescription::getLongName() const
+    const std::string& OptionDescription::getLongName() const
     {
         return longName;
     }
 
-    OptionDescription&
-    OptionDescription::set_name(const std::string& name)
+    OptionDescription& OptionDescription::set_name(const std::string& name)
     {
-        string::size_type n = name.find(',');
-        if (n != string::npos) {
+        auto n = name.find(',');
+        if (n != string::npos)
+        {
             assert(n == name.size()-2);
             longName = name.substr(0, n);
             shortName = '-' + name.substr(n+1,1);
-        } else {
+        }
+        else
+        {
             longName = name;
         }
         return *this;
@@ -164,45 +147,6 @@ namespace options {
             return "";
     }
 
-    DescriptionInit::
-    DescriptionInit(OptionsDescription* owner)
-    : owner(owner)
-    {}
-
-    DescriptionInit&
-    DescriptionInit::
-    operator()(const std::string& name,
-               const std::string& description)
-    {
-        std::shared_ptr<OptionDescription> d(
-            new OptionDescription(name, new Untyped_value(true), description));
-
-        owner->add(d);
-        return *this;
-    }
-
-    DescriptionInit&
-    DescriptionInit::
-    operator()(const std::string& name,
-               const Value_semantic* s)
-    {
-        std::shared_ptr<OptionDescription> d(new OptionDescription(name, s));
-        owner->add(d);
-        return *this;
-    }
-
-    DescriptionInit&
-    DescriptionInit::
-    operator()(const std::string& name,
-               const Value_semantic* s,
-               const std::string& description)
-    {
-        std::shared_ptr<OptionDescription> d(new OptionDescription(name, s, description));
-
-        owner->add(d);
-        return *this;
-    }
-
     OptionsDescription::OptionsDescription()
     {
     }
@@ -210,17 +154,16 @@ namespace options {
     OptionsDescription::OptionsDescription(const std::string& caption)
     : m_caption(caption)
     {
-
     }
     
-    void OptionsDescription::add(std::shared_ptr<OptionDescription> desc)
+    void OptionsDescription::add(std::map<std::string, std::string>&& args)
     {
-        m_options.push_back(desc);
-    }
+        for (auto& entry : args)
+        {
+            std::shared_ptr<OptionDescription> d(new OptionDescription(entry.first, new Untyped_value(true), entry.second));
+            m_options.push_back(d);
+        }
 
-    DescriptionInit OptionsDescription::add_options()
-    {       
-        return DescriptionInit(this);
     }
 
     const OptionDescription* OptionsDescription::find(const std::string& name,
@@ -235,11 +178,9 @@ namespace options {
         
         for(auto one : m_options)
         {
-            OptionDescription::matchResult r = 
-                one->match(name, approx, long_ignore_case, short_ignore_case);
+            auto r = one->match(name, approx, long_ignore_case, short_ignore_case);
 
-            if (r == OptionDescription::no_match)
-                continue;
+            if (r == OptionDescription::no_match) continue;
 
             if (r == OptionDescription::full_match)
             {                

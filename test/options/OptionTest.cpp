@@ -11,10 +11,7 @@ FIXTURE(OptionTest)
 
     void give_option_config(std::map<std::string, std::string>&& tbl)
     {
-        for (auto& entry : tbl)
-        {
-            desc.add_options()(entry.first, entry.second);
-        }
+        desc.add(std::move(tbl));
     }
 
     static const char** to_argv(std::vector<const char*>&& options)
