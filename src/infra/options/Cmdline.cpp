@@ -1,8 +1,9 @@
 #include <l0-infra/options/program_options/detail/Cmdline.hpp>
 #include "l0-infra/options/program_options/OptionsDescription.hpp"
-#include "l0-infra/options/program_options/ValueSemantic.hpp"
 #include "l0-infra/options/program_options/Option.hpp"
 #include <cassert>
+
+using namespace std;
 
 namespace options { namespace detail {
 

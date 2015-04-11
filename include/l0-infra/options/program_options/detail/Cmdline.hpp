@@ -1,10 +1,7 @@
 #ifndef CMDLINE_H
 #define CMDLINE_H
 
-#include <string>
-#include <vector>
-
-#include "../OptionsDescription.hpp"
+#include "l0-infra/options/program_options/OptionsDescription.hpp"
 
 namespace options {
 	
@@ -31,8 +28,9 @@ namespace options {
         const OptionsDescription* desc;
     };
     
-}}
+}
 
+}
 
 #endif
 

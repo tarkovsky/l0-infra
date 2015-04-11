@@ -1,6 +1,5 @@
 #include "l0-infra/options/program_options/Parsers.hpp"
 #include "l0-infra/options/program_options/OptionsDescription.hpp"
-#include "l0-infra/options/program_options/ValueSemantic.hpp"
 #include "l0-infra/options/program_options/VariablesMap.hpp"
 
 #include <cassert>
