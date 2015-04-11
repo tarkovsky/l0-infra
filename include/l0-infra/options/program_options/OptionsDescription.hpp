@@ -1,12 +1,10 @@
-#ifndef OPTIONSDESCRIPTION_H
-#define OPTIONSDESCRIPTION_H
+#ifndef OPTIONSDESCRIPTION_Fri_Apr_10_23_35_29_2015_H
+#define OPTIONSDESCRIPTION_Fri_Apr_10_23_35_29_2015_H
 
 #include <string>
 #include <vector>
 #include <map>
 #include <memory>
-
-#include "ValueSemantic.hpp"
 
 namespace options {
 
@@ -15,24 +13,17 @@ namespace options {
         OptionDescription();
 
         OptionDescription(const std::string& name,
-                           const Value_semantic* s);
-
-        OptionDescription(const std::string& name,
-                           const Value_semantic* s,
                            const std::string& description);
 
         enum matchResult { no_match, full_match, approximate_match };
 
-        matchResult match(const std::string& option, bool approx,
-                           bool long_ignore_case, bool short_ignore_case) const;
+        matchResult match(const std::string& option, bool approx) const;
         
         const std::string& getKey(const std::string& option) const;
         
         const std::string& getLongName() const;
 
         const std::string& getDescription() const;
-
-        std::shared_ptr<const Value_semantic> semantic() const;
 
         std::string formatName() const;
 
@@ -43,7 +34,6 @@ namespace options {
         OptionDescription& set_name(const std::string& name);
 
         std::string shortName, longName, description;
-        std::shared_ptr<const Value_semantic> valueSemantic;
     };
 
     struct OptionsDescription
@@ -54,9 +44,7 @@ namespace options {
         void add(std::map<std::string, std::string>&& args);
 
         const OptionDescription* find(const std::string& name,
-                                               bool approx,
-                                               bool long_ignore_case = false,
-                                               bool short_ignore_case = false) const;
+                                               bool approx) const;
 
         friend std::ostream& operator<<(std::ostream& os, 
                                              const OptionsDescription& desc);

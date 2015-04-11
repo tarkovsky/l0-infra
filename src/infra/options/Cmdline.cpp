@@ -1,6 +1,7 @@
 #include <l0-infra/options/program_options/detail/Cmdline.hpp>
 #include "l0-infra/options/program_options/OptionsDescription.hpp"
 #include "l0-infra/options/program_options/ValueSemantic.hpp"
+#include "l0-infra/options/program_options/Option.hpp"
 #include <cassert>
 
 namespace options { namespace detail {
@@ -40,33 +41,33 @@ namespace options { namespace detail {
     	}
 	}
 
+	bool Cmdline::tryAllParser(const std::string& arg, vector<Option>& result)
+	{
+		static style_parser style_parsers[] = {&Cmdline::parseLongOption
+											   , &Cmdline::parseShortOption};
+		for(auto parser : style_parsers)
+		{
+			auto next  = (this->*parser)(arg);
+
+			if(next.empty()) continue;
+
+			result.insert(result.begin(), next.begin(), next.end());
+			return true;
+		}
+
+		return false;
+	}
+		
     vector<Option> Cmdline::run()
     {
     	assert(desc);
 
-    	static style_parser style_parsers[] = {&Cmdline::parseLongOption
-    			, &Cmdline::parseShortOption};
-
     	vector<Option> result;
-    	while(!args.empty())
+    	for(auto arg : args)
     	{
-    		bool unkonwn = true;
-    		for(auto parser : style_parsers)
-    		{
-    			vector<Option> next = (this->*parser)(args[0]);
-
-    			if(!next.empty())
-    			{
-    				result.insert(result.begin(), next.begin(), next.end());
-    				args.erase(args.begin());
-    				unkonwn = false;
-    				break;
-    			}
-    		}
-
-    		if (unkonwn) {
-    			fillUnknowOption(result, args[0]);
-    			args.erase(args.begin());
+    		if (tryAllParser(arg, result))
+			{
+    			fillUnknowOption(result, arg);
     		}
     	}
 
@@ -105,7 +106,7 @@ namespace
 
     	bool tryFind(const OptionsDescription& desc)
     	{
-    		return foundOption = desc.find(name, false, true, false);
+    		return foundOption = desc.find(name, false);
     	}
 
     	void fillOption(vector<Option>& result)
@@ -164,7 +165,7 @@ namespace
 
     		bool tryFind(const OptionsDescription& desc)
     		{
-    			return foundOption = desc.find(name, false, false, true);
+    			return foundOption = desc.find(name, false);
     		}
 
     		bool finished() const

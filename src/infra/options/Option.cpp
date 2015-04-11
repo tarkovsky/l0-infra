@@ -1,15 +1,9 @@
-/*
-
- *
- *  Created on: 2015年4月6日
- *      Author: zhangchao
- */
 #include "l0-infra/options/program_options/Option.hpp"
 #include <iostream>
 
 namespace options {
-Option::Option() :
-		unregistered(false), hasValue(false)
+	
+Option::Option() : unregistered(false), hasValue(false)
 {
 }
 
@@ -34,4 +28,5 @@ void Option::dump() const
 		std::cout << var << std::endl;
 	}
 }
+	
 }

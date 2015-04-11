@@ -3,79 +3,44 @@
 #include <algorithm>
 #include <cassert>
 #include <iterator>
+#include <iostream>
 
 using namespace std;
 
 namespace options {
 
-   namespace {
-
-       template< class charT >
-       std::basic_string< charT >  tolower_(const std::basic_string< charT >& str)
-       {
-           std::basic_string< charT > result;
-           for (typename std::basic_string< charT >::size_type i = 0; i < str.size(); ++i)
-           {
-               result.append(1, static_cast< charT >(std::tolower(str[i])));
-           }   
-           return result;
-       }
-
-    }
-
     OptionDescription::OptionDescription()
     {
     }
     
-    OptionDescription::
-    OptionDescription(const std::string& name,
-                       const Value_semantic* s)
-    : valueSemantic(s)
-    {
-        this->set_name(name);
-    }
-                                           
-
-    OptionDescription::
-    OptionDescription(const std::string& name,
-                      const Value_semantic* s,
+    OptionDescription::OptionDescription(const std::string& name,
                       const std::string& description)
-    : description(description), valueSemantic(s)
+    : description(description)
     {
         this->set_name(name);
     }
 
     OptionDescription::matchResult
     OptionDescription::match(const std::string& option, 
-                              bool approx, 
-                              bool long_ignore_case,
-                              bool short_ignore_case) const
+                              bool approx) const
     {
         auto result = no_match;        
         
-        std::string local_long_name((long_ignore_case ? tolower_(longName) : longName));
-        if (!local_long_name.empty()) {
-        
-            auto local_option = (long_ignore_case ? tolower_(option) : option);
-
-            if (local_long_name == local_option)
-            {
+		if (longName == option)
+		{
                 result = full_match;
-            }
-            else if (approx)
-            {
-                if (local_long_name.find(local_option) == 0)
-                {
-                    result = approximate_match;
-                }
-            }
-        }
+		}
+		else if (approx)
+		{
+			if (longName.find(option) == 0)
+			{
+				result = approximate_match;
+			}
+		}
          
         if (result != full_match)
         {
-            std::string local_option(short_ignore_case ? tolower_(option) : option);
-            std::string local_short_name(short_ignore_case ? tolower_(shortName) : shortName);
-            if (local_short_name == local_option)
+            if (shortName == option)
             {
                 result = full_match;
             }
@@ -119,12 +84,6 @@ namespace options {
         return description;
     }
 
-    std::shared_ptr<const Value_semantic>
-    OptionDescription::semantic() const
-    {
-        return valueSemantic;
-    }
-    
     std::string 
     OptionDescription::formatName() const
     {
@@ -136,15 +95,6 @@ namespace options {
                   append(longName).append(" ]");
         }
         return string("--").append(longName);
-    }
-
-    std::string 
-    OptionDescription::formatParameter() const
-    {
-        if (valueSemantic->max_tokens() != 0)
-            return valueSemantic->name();
-        else
-            return "";
     }
 
     OptionsDescription::OptionsDescription()
@@ -160,16 +110,14 @@ namespace options {
     {
         for (auto& entry : args)
         {
-            std::shared_ptr<OptionDescription> d(new OptionDescription(entry.first, new Untyped_value(true), entry.second));
+            std::shared_ptr<OptionDescription> d(new OptionDescription(entry.first, entry.second));
             m_options.push_back(d);
         }
 
     }
 
     const OptionDescription* OptionsDescription::find(const std::string& name,
-                                      bool approx,
-                                      bool long_ignore_case,
-                                      bool short_ignore_case) const
+													  bool approx) const
     {
         std::shared_ptr<OptionDescription> found;
         bool had_full_match = false;
@@ -178,8 +126,7 @@ namespace options {
         
         for(auto one : m_options)
         {
-            auto r = one->match(name, approx, long_ignore_case, short_ignore_case);
-
+            auto r = one->match(name, approx);
             if (r == OptionDescription::no_match) continue;
 
             if (r == OptionDescription::full_match)
@@ -195,162 +142,11 @@ namespace options {
                     found = one;
             }
         }
+
         if (full_matches.size() > 1) return 0;
 
         if (full_matches.empty() && approximate_matches.size() > 1) return 0;
 
         return found.get();
     }
-    
-    std::ostream& operator<<(std::ostream& os, const OptionsDescription& desc)
-    {
-        desc.print(os);
-        return os;
-    }
-
-    namespace {
-
-        void format_paragraph(std::ostream& os,
-                              std::string par,
-                              unsigned indent,
-                              unsigned line_length)
-        {                    
-            assert(indent < line_length);
-            line_length -= indent;
-
-            string::size_type par_indent = par.find('\t');
-
-            if (par_indent == string::npos)
-            {
-                par_indent = 0;
-            }
-            else
-            {
-                par.erase(par_indent, 1);
-
-                assert(par_indent < line_length);
-
-                if (par_indent >= line_length)
-                {
-                    par_indent = 0;
-                }            
-            }
-          
-            if (par.size() < line_length)
-            {
-                os << par;
-            }
-            else
-            {
-                string::const_iterator       line_begin = par.begin();
-                const string::const_iterator par_end = par.end();
-
-                bool first_line = true; // of current paragraph!        
-            
-                while (line_begin < par_end)  // paragraph lines
-                {
-                    if (!first_line)
-                    {
-                        if ((*line_begin == ' ') &&
-                            ((line_begin + 1 < par_end) &&
-                             (*(line_begin + 1) != ' ')))
-                        {
-                            line_begin += 1;  // line_begin != line_end
-                        }
-                    }
-
-                    unsigned remaining = static_cast<unsigned>(std::distance(line_begin, par_end));
-                    string::const_iterator line_end = line_begin + 
-                        ((remaining < line_length) ? remaining : line_length);
-            
-                    if ((*(line_end - 1) != ' ') &&
-                        ((line_end < par_end) && (*line_end != ' ')))
-                    {
-                        string::const_iterator last_space =
-                            find(reverse_iterator<string::const_iterator>(line_end),
-                                 reverse_iterator<string::const_iterator>(line_begin),
-                                 ' ')
-                            .base();
-                
-                        if (last_space != line_begin)
-                        {                 
-                            if (static_cast<unsigned>(std::distance(last_space, line_end)) < 
-                                (line_length / 2))
-                            {
-                                line_end = last_space;
-                            }
-                        }                                                
-                    } // prevent chopped words
-             
-                    copy(line_begin, line_end, ostream_iterator<char>(os));
-              
-                    if (first_line)
-                    {
-                        indent += static_cast<unsigned>(par_indent);
-                        line_length -= static_cast<unsigned>(par_indent); // there's less to work with now
-                        first_line = false;
-                    }
-
-                    if (line_end != par_end)
-                    {
-                        os << '\n';
-                
-                        for(unsigned pad = indent; pad > 0; --pad)
-                        {
-                            os.put(' ');
-                        }                                                        
-                    }
-              
-                    line_begin = line_end;              
-                } // paragraph lines
-            }          
-        }                              
-        
-    
-        void format_one(std::ostream& os, const OptionDescription& opt, 
-                        unsigned first_column_width)
-        {
-            stringstream ss;
-            ss << "  " << opt.formatName() << ' ' << opt.formatParameter();
-            
-            os << ss.str();
-
-            if (!opt.getDescription().empty())
-            {
-                if (ss.str().size() >= first_column_width)
-                {
-                   os.put('\n'); // first column is too long, lets put description in new line
-                   for (unsigned pad = first_column_width; pad > 0; --pad)
-                   {
-                      os.put(' ');
-                   }
-                } else {
-                   for(unsigned pad = first_column_width - static_cast<unsigned>(ss.str().size()); pad > 0; --pad)
-                   {
-                      os.put(' ');
-                   }
-                }
-            }
-        }
-    }
-
-    void OptionsDescription::print(std::ostream& os, unsigned width) const
-    {
-        if (!m_caption.empty())
-            os << m_caption << ":\n";
-
-        if (!width)
-            width = default_line_length;
-
-        /* The options formatting style is stolen from Subversion. */
-        for (unsigned i = 0; i < m_options.size(); ++i)
-        {
-            const OptionDescription& opt = *m_options[i];
-
-            format_one(os, opt, width);
-
-            os << "\n";
-        }
-    }
-
 }

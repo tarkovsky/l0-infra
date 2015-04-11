@@ -4,10 +4,13 @@
 #include <string>
 #include <vector>
 
-#include "../Option.hpp"
 #include "../OptionsDescription.hpp"
 
-namespace options { namespace detail {
+namespace options {
+	
+	struct  Option;
+
+	namespace detail {
 
     struct Cmdline
 	{
@@ -19,9 +22,9 @@ namespace options { namespace detail {
 
 	private:
         void init(const std::vector<std::string>& args);
-        std::vector<Option> parseLongOption(const string& arg);
-        std::vector<Option> parseShortOption(const string& args);
-
+        std::vector<Option> parseLongOption(const std::string& arg);
+        std::vector<Option> parseShortOption(const std::string& arg);
+		bool tryAllParser(const std::string& arg, std::vector<Option>& result);
 
 	private:
         std::vector<std::string> args;
