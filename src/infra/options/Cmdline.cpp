@@ -28,7 +28,7 @@ namespace options { namespace detail {
         this->desc= &desc;
     }
 
-    typedef std::vector<Option> (options::detail::Cmdline::* style_parser)(const std::string&);
+    typedef std::vector<Option> (Cmdline::* style_parser)(const std::string&);
 
 
     namespace
@@ -46,9 +46,9 @@ namespace options { namespace detail {
 	{
 		static style_parser style_parsers[] = {&Cmdline::parseLongOption
 											   , &Cmdline::parseShortOption};
-		for(auto parser : style_parsers)
+		for(auto& parser : style_parsers)
 		{
-			auto next  = (this->*parser)(arg);
+			const auto& next  = (this->*parser)(arg);
 
 			if(next.empty()) continue;
 
@@ -64,7 +64,7 @@ namespace options { namespace detail {
     	assert(desc);
 
     	vector<Option> result;
-    	for(auto arg : args)
+    	for(auto& arg : args)
     	{
     		if (tryAllParser(arg, result))
 			{

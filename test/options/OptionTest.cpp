@@ -7,11 +7,12 @@ using namespace hamcrest;
 FIXTURE(OptionTest)
 {
     OptionsDescription desc {"Allowed options"};
-    VariablesMap varMap;
+	VariablesMap& varMap = VariablesMap::getInstance();
 
 	void give_option_config(std::map<std::string, std::string>&& tbl)
 	{
         desc.add(std::move(tbl));
+		varMap.clear();
     }
 
     static const char** to_argv(std::vector<const char*>&& options)
@@ -32,7 +33,8 @@ FIXTURE(OptionTest)
 
         SCOPE_EXIT([=] { delete [] argv; });
 
-        varMap = parseArgs(options.size(), argv, desc);
+        parseArgs(options.size(), argv, desc);
+		varMap = VariablesMap::getInstance();
     }
 
     template <typename T>

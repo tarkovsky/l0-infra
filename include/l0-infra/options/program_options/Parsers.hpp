@@ -32,7 +32,7 @@ namespace options {
         const OptionsDescription* desc;
     };
 
-    VariablesMap parseArgs(int argc, const char* const argv[],
+    void parseArgs(int argc, const char* const argv[],
                         const OptionsDescription& desc);
 }
 #endif

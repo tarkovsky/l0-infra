@@ -22,7 +22,7 @@ namespace  options {
     {       
         assert(options.description);
 
-        for (auto var : options.options)
+        for (auto& var : options.options)
         {
             if (var.unregistered) continue;
 
@@ -35,6 +35,12 @@ namespace  options {
 			setMapValue(var, map);
         }
     }
+
+	VariablesMap& VariablesMap::getInstance()
+	{
+		static VariablesMap map;
+		return map;
+	}
      
     VariablesMap::VariablesMap()
     {}

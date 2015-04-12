@@ -27,10 +27,9 @@ namespace options {
 		bool empty;
     };
 
-    struct  VariablesMap :  std::map<std::string, VariableValue>
+    struct  VariablesMap : std::map<std::string, VariableValue>
     {
-        VariablesMap();
-
+		static VariablesMap&  getInstance();
         const VariableValue& operator[](const std::string& name) const
         { return get(name); }
 
@@ -38,6 +37,8 @@ namespace options {
         bool has(const std::string& name) const;
 		
 	private:
+		VariablesMap();
+		
 		friend void store(const ParsedOptions& options, VariablesMap& xm);
         const VariableValue& get(const std::string& name) const;
     };

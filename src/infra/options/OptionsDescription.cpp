@@ -124,9 +124,10 @@ namespace options {
         vector<string> approximate_matches;
         vector<string> full_matches;
         
-        for(auto one : m_options)
+        for(auto& one : m_options)
         {
-            auto r = one->match(name, approx);
+
+			auto r = one->match(name, approx);
             if (r == OptionDescription::no_match) continue;
 
             if (r == OptionDescription::full_match)

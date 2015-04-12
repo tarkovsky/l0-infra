@@ -18,12 +18,12 @@ void Option::dump() const
 {
 	std::cout << "option dump start string key = " << string_key << std::endl;
 	std::cout << "option value dump start" << std::endl;
-	for (auto var : value)
+	for (auto& var : value)
 	{
 		std::cout << var << std::endl;
 	}
 	std::cout << "option tokens dump start" << std::endl;
-	for (auto var : original_tokens)
+	for (auto& var : original_tokens)
 	{
 		std::cout << var << std::endl;
 	}
