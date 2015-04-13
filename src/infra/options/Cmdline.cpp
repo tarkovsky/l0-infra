@@ -229,6 +229,7 @@ namespace
     		else
     		{
     			parser.addOption(result);
+				if(parser.finished()) return result;
     			parser.goNext();
     		}
     	}
