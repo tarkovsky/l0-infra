@@ -10,14 +10,12 @@ namespace options {
 
     struct OptionDescription
 	{
-        OptionDescription();
-
         OptionDescription(const std::string& name,
                            const std::string& description);
 
-        enum matchResult { no_match, full_match, approximate_match };
+        enum MatchResult { NO_MATCH, FULL_MATCH, APPROXIMATE_MATCH };
 
-        matchResult match(const std::string& option, bool approx) const;
+        MatchResult match(const std::string& option, bool approx) const;
         
         const std::string& getKey(const std::string& option) const;
         
@@ -31,14 +29,13 @@ namespace options {
 
     private:
     
-        OptionDescription& set_name(const std::string& name);
+        OptionDescription& setName(const std::string& name);
 
         std::string shortName, longName, description;
     };
 
     struct OptionsDescription
     {
-        OptionsDescription();
         OptionsDescription(const std::string& caption);
 
         void add(std::map<std::string, std::string>&& args);

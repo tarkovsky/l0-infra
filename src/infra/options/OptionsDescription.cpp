@@ -8,41 +8,36 @@
 using namespace std;
 
 namespace options {
-
-    OptionDescription::OptionDescription()
-    {
-    }
     
-    OptionDescription::OptionDescription(const std::string& name,
-                      const std::string& description)
-    : description(description)
+    OptionDescription::OptionDescription
+        ( const std::string& name
+        , const std::string& description)
+        : description(description)
     {
-        this->set_name(name);
+        setName(name);
     }
 
-    OptionDescription::matchResult
-    OptionDescription::match(const std::string& option, 
-                              bool approx) const
+    auto OptionDescription::match(const std::string& option, bool approx) const -> MatchResult
     {
-        auto result = no_match;        
+        auto result = NO_MATCH;
         
 		if (longName == option)
 		{
-                result = full_match;
+                result = FULL_MATCH;
 		}
 		else if (approx)
 		{
 			if (longName.find(option) == 0)
 			{
-				result = approximate_match;
+				result = APPROXIMATE_MATCH;
 			}
 		}
          
-        if (result != full_match)
+        if (result != FULL_MATCH)
         {
             if (shortName == option)
             {
-                result = full_match;
+                result = FULL_MATCH;
             }
         }
 
@@ -51,10 +46,7 @@ namespace options {
 
     const std::string& OptionDescription::getKey(const std::string& option) const
     {        
-        if (!longName.empty()) 
-            return longName;
-        else
-            return shortName;
+        return longName.empty() ? shortName : longName;
     }
 
     const std::string& OptionDescription::getLongName() const
@@ -62,7 +54,7 @@ namespace options {
         return longName;
     }
 
-    OptionDescription& OptionDescription::set_name(const std::string& name)
+    OptionDescription& OptionDescription::setName(const std::string& name)
     {
         auto n = name.find(',');
         if (n != string::npos)
@@ -97,10 +89,6 @@ namespace options {
         return string("--").append(longName);
     }
 
-    OptionsDescription::OptionsDescription()
-    {
-    }
-
     OptionsDescription::OptionsDescription(const std::string& caption)
     : m_caption(caption)
     {
@@ -113,7 +101,6 @@ namespace options {
             std::shared_ptr<OptionDescription> d(new OptionDescription(entry.first, entry.second));
             m_options.push_back(d);
         }
-
     }
 
     const OptionDescription* OptionsDescription::find(const std::string& name,
@@ -128,9 +115,9 @@ namespace options {
         {
 
 			auto r = one->match(name, approx);
-            if (r == OptionDescription::no_match) continue;
+            if (r == OptionDescription::NO_MATCH) continue;
 
-            if (r == OptionDescription::full_match)
+            if (r == OptionDescription::FULL_MATCH)
             {                
                 full_matches.push_back(one->getKey(name));
                 found = one;
