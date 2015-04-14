@@ -14,7 +14,7 @@ namespace  options {
 		m[option.string_key].setValue("");
 		
 		if(option.value.empty()) return ;
-		m[option.string_key].setValue(option.value[0]);
+		m[option.string_key].setValue(option.value);
 	}
 
 

@@ -10,11 +10,10 @@ namespace options {
     {
         Option();
         Option(const std::string& xstring_key, 
-               const std::vector< std::string> &xvalue);
+               const std::string& xvalue);
 
         std::string string_key;
-        std::vector< std::string > value;
-        std::vector< std::string> original_tokens;
+        std::string value;
         bool unregistered;
         bool hasValue;
 
