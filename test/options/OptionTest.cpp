@@ -46,7 +46,7 @@ FIXTURE(OptionTest)
     void then_expect_option_with_value(const std::string& option, const std::string& value)
     {
         ASSERT_THAT(varMap.has(option), be_true());
-        ASSERT_THAT(varMap[option].getValue(), is(value));
+        ASSERT_THAT(varMap[option], is(value));
     }
 
     #define and_expect_has_option then_expect_has_option

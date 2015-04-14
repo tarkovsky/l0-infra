@@ -8,7 +8,6 @@ namespace options {
                        const OptionsDescription& desc)
     {
     	auto&  vm = VariablesMap::getInstance();
-    	store(BasicCommandLineParser(argc, argv).options(desc).run(), vm);
+    	vm.store(BasicCommandLineParser(argc, argv).options(desc).run());
     }
-
 }

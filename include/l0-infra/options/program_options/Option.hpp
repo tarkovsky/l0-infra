@@ -8,11 +8,10 @@ namespace options {
 
     struct Option 
     {
-        Option();
-        Option(const std::string& xstring_key, 
-               const std::string& xvalue);
+        Option(const std::string& key,
+               const std::string& value);
 
-        std::string string_key;
+        std::string key;
         std::string value;
         bool unregistered;
         bool hasValue;

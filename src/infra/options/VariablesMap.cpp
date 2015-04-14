@@ -7,18 +7,16 @@
 
 namespace  options {
 
-    using namespace std;
-
-	void setMapValue(const Option& option, std::map<std::string, VariableValue>& m)
+	void setMapValue(const Option& option, std::map<std::string, std::string>& m)
 	{
-		m[option.string_key].setValue("");
-		
-		if(option.value.empty()) return ;
-		m[option.string_key].setValue(option.value);
+		m[option.key] = "";
+
+		if(option.value.empty()) return;
+		m[option.key] = option.value;
 	}
 
 
-    void store(const ParsedOptions& options, VariablesMap& map)
+    void VariablesMap::store(const ParsedOptions& options)
     {       
         assert(options.description);
 
@@ -26,13 +24,13 @@ namespace  options {
         {
             if (var.unregistered) continue;
 
-            const string& option_name = var.string_key;
+            const std::string& option_name = var.key;
             if (option_name.empty()) continue;
 			
-			if(!options.description->
-			   find(option_name, var.hasValue)) continue;
+			if(!options.description->find(option_name, var.hasValue))
+			    continue;
 
-			setMapValue(var, map);
+			setMapValue(var, *this);
         }
     }
 
@@ -41,49 +39,22 @@ namespace  options {
 		static VariablesMap map;
 		return map;
 	}
-     
-    VariablesMap::VariablesMap()
-    {}
 
     void VariablesMap::clear()
     {
-        std::map<std::string, VariableValue>::clear();
+        super::clear();
     }
 
-    const VariableValue& VariablesMap::get(const std::string& name) const
+    const std::string& VariablesMap::operator[](const std::string& name) const
     {
-        static VariableValue empty;
-        const_iterator i = this->find(name);
-        if (i == this->end())
-            return empty;
-        else
-            return i->second;
+        static std::string empty;
+
+        auto i = super::find(name);
+        return i == super::end() ? empty : i->second;
     }
     
     bool VariablesMap::has(const std::string& name) const
     {
-    	return std::map<std::string, VariableValue>::count(name) >= 1;
+    	return super::count(name) != 0;
     }
-
-	VariableValue::VariableValue() : empty(false)
-	{
-	}
-
-	bool VariableValue::isEmpty() const
-	{
-		return empty;
-	}
-
-	void VariableValue::setValue(const std::string& str)
-	{
-		value = str;
-		empty = true;
-	}
-
-	const std::string& VariableValue::getValue() const
-	{
-		return value;
-	}
-   
-
 }

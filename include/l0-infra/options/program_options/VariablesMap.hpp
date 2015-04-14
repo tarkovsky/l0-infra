@@ -9,39 +9,22 @@
 namespace options {
 
     struct ParsedOptions;
-    struct VariablesMap;
 
-    void store(const ParsedOptions& options, VariablesMap& m);
-
-    struct  VariableValue
+    struct  VariablesMap : std::map<std::string, std::string>
     {
-		VariableValue();
-		
-		bool isEmpty() const ;
-        const std::string& getValue() const;
-
-		void setValue(const std::string& value);
-		
     private:
-        std::string value;
-		bool empty;
-    };
+        using super = std::map<std::string, std::string>;
 
-    struct  VariablesMap : std::map<std::string, VariableValue>
-    {
+    public:
 		static VariablesMap&  getInstance();
-        const VariableValue& operator[](const std::string& name) const
-        { return get(name); }
+
+		void store(const ParsedOptions& options);
+
+        const std::string& operator[](const std::string& name) const;
 
         void clear(); 
         bool has(const std::string& name) const;
-		
-	private:
-		VariablesMap();
-		
-		friend void store(const ParsedOptions& options, VariablesMap& xm);
-        const VariableValue& get(const std::string& name) const;
-    };
+	};
 }
 
 #endif
