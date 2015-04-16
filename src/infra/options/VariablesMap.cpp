@@ -18,16 +18,14 @@ namespace  options {
 
     void VariablesMap::store(const ParsedOptions& options)
     {       
-        assert(options.description);
-
-        for (auto& var : options.options)
+        for (auto& var : options.options())
         {
             if (var.unregistered) continue;
 
             const std::string& option_name = var.key;
             if (option_name.empty()) continue;
 			
-			if(!options.description->find(option_name, var.hasValue))
+			if(!options.description().find(option_name, var.hasValue))
 			    continue;
 
 			setMapValue(var, *this);
