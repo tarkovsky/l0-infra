@@ -2,26 +2,21 @@
 #include "l0-infra/options/program_options/OptionsDescription.hpp"
 #include "l0-infra/options/program_options/VariablesMap.hpp"
 
-#include <cassert>
-#include <iostream>
-
 namespace  options {
 
 	void setMapValue(const Option& option, std::map<std::string, std::string>& m)
 	{
-		m[option.key] = "";
+		m[option.key()] = "";
 
-		if(option.value.empty()) return;
-		m[option.key] = option.value;
+		if(option.value().empty()) return;
+		m[option.key()] = option.value();
 	}
 
     void VariablesMap::store(const ParsedOptions& options)
     {       
         for (auto& var : options.options())
         {
-            if (var.unregistered) continue;
-
-            const std::string& option_name = var.key;
+            const std::string& option_name = var.key();
             if (option_name.empty()) continue;
 			
 			setMapValue(var, *this);

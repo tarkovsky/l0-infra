@@ -6,31 +6,31 @@
 #include "l0-infra/options/program_options/Option.hpp"
 #include "l0-infra/dci/Role.h"
 
-namespace options {
+OPTIONS_NS_BEGIN
 
-    struct OptionsDescription;
+struct OptionsDescription;
 
-    DEFINE_ROLE(ParsedOptions)
-	{
-        ABSTRACT(const std::vector<Option>& options() const);
-        ABSTRACT(const OptionsDescription& description() const);
-    };
+DEFINE_ROLE(ParsedOptions)
+{
+    ABSTRACT(const std::vector<Option>& options() const);
+    ABSTRACT(const OptionsDescription& description() const);
+};
 
-    struct CommandLineParser : private detail::Cmdline, ParsedOptions{
+struct CommandLineParser : private Cmdline, ParsedOptions{
 
-        CommandLineParser(int argc, const char** const argv
-                          , const OptionsDescription& desc);
+    CommandLineParser(int argc, const char** const argv
+                      , const OptionsDescription& desc);
 
-        const ParsedOptions& run();
-    private:
-        OVERRIDE(const std::vector<Option>& options() const);
-        OVERRIDE(const OptionsDescription& description() const);
+    const ParsedOptions& run();
+private:
+    OVERRIDE(const std::vector<Option>& options() const);
+    OVERRIDE(const OptionsDescription& description() const);
 
-    private:
-        std::vector<Option> parsedOptions;
-        const OptionsDescription& desc;
-    };
+private:
+    std::vector<Option> parsedOptions;
+    const OptionsDescription& desc;
+};
 
+OPTIONS_NS_END
 
-}
 #endif

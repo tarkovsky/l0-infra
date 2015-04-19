@@ -1,21 +1,31 @@
 #include "l0-infra/options/program_options/Option.hpp"
 #include <iostream>
 
-namespace options {
+OPTIONS_NS_BEGIN
 
-Option::Option(const std::string& key,const std::string& value)
-	: key(key)
-	, value(value)
-	, unregistered(false)
-	, hasValue(!value.empty())
+using namespace std;
+    
+Option::Option(const string& key,const string& value)
+    : _key(key)
+    , _value(value)
 {
 }
 
-void Option::dump() const
+void  Option::dump() const
 {
-	std::cout << "option dump start string key = " << key << std::endl;
-	std::cout << "option value dump start" << std::endl;
-	std::cout << value << std::endl;
+    cout << "option dump start string key = " << _key << endl;
+    cout << "option value dump start" << endl;
+    cout << _value << endl;
 }
-	
+
+const string& Option::value() const
+{
+    return _value;
 }
+    
+const string& Option::key() const
+{
+    return _key;
+}       
+
+OPTIONS_NS_END

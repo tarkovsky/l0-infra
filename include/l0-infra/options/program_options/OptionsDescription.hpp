@@ -1,55 +1,54 @@
 #ifndef OPTIONSDESCRIPTION_Fri_Apr_10_23_35_29_2015_H
 #define OPTIONSDESCRIPTION_Fri_Apr_10_23_35_29_2015_H
 
+#include "program_options.h"
 #include <string>
 #include <vector>
 #include <map>
 #include <memory>
 
-namespace options {
+OPTIONS_NS_BEGIN
 
-    struct OptionDescription
-	{
-        OptionDescription(const std::string& name,
-                           const std::string& description);
+struct OptionDescription
+{
+    OptionDescription(const std::string& name,
+                      const std::string& description);
 
-        bool match(const std::string& option) const;
+    bool match(const std::string& option) const;
         
-        const std::string& getKey(const std::string& option) const;
-        const std::string& getLongName() const;
-        const std::string& getDescription() const;
+    const std::string& getKey(const std::string& option) const;
+    const std::string& getLongName() const;
+    const std::string& getDescription() const;
 
-        std::string formatName() const;
-        std::string formatParameter() const;
+    std::string formatName() const;
+    std::string formatParameter() const;
 
-    private:
+private:
     
-        OptionDescription& setName(const std::string& name);
+    OptionDescription& setName(const std::string& name);
 
-        std::string shortName, longName, description;
-    };
+    std::string shortName, longName, description;
+};
 
-    struct OptionsDescription
-    {
-        OptionsDescription(const std::string& caption);
+struct OptionsDescription
+{
+    OptionsDescription(const std::string& caption);
 
-        void add(std::map<std::string, std::string>&& args);
+    void add(std::map<std::string, std::string>&& args);
 
-        const OptionDescription* find(const std::string& name) const;
+    friend std::ostream& operator<<(std::ostream& os, 
+                                    const OptionsDescription& desc);
+    const OptionDescription* find(const std::string& name) const;
+    void print(std::ostream& os, unsigned width = 0) const;
 
-        friend std::ostream& operator<<(std::ostream& os, 
-                                             const OptionsDescription& desc);
+private:
+    enum { default_line_length = 80};
+    using DescPtr =  std::shared_ptr<OptionDescription>;
 
-        void print(std::ostream& os, unsigned width = 0) const;
+    std::string m_caption;
+    std::vector<DescPtr > m_options;
+};
 
-    private:
-        enum { default_line_length = 80};
-        using DescPtr =  std::shared_ptr<OptionDescription>;
-
-        std::string m_caption;
-
-        std::vector<DescPtr > m_options;
-    };
-}
+OPTIONS_NS_END
 
 #endif

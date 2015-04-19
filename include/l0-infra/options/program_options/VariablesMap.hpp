@@ -4,27 +4,28 @@
 #include <string>
 #include <map>
 
-namespace options {
+OPTIONS_NS_BEGIN
 
-    struct OptionsDescription;
-    struct ParsedOptions;
+struct OptionsDescription;
+struct ParsedOptions;
 
-    struct  VariablesMap : std::map<std::string, std::string>
-    {
-		static VariablesMap&  getInstance();
+struct  VariablesMap : std::map<std::string, std::string>
+{
+    static VariablesMap&  getInstance();
 
-		void parseArgs(int argc, const char** const argv
-		                , const OptionsDescription& desc);
+    void parseArgs(int argc, const char** const argv
+                   , const OptionsDescription& desc);
 
-        const std::string& operator[](const std::string& name) const;
+    const std::string& operator[](const std::string& name) const;
 
-        void clear(); 
-        bool has(const std::string& name) const;
+    void clear(); 
+    bool has(const std::string& name) const;
 
-    private:
-        using super = std::map<std::string, std::string>;
-		void store(const ParsedOptions& options);
-	};
-}
+private:
+    using super = std::map<std::string, std::string>;
+    void store(const ParsedOptions& options);
+};
+
+OPTIONS_NS_END
 
 #endif
