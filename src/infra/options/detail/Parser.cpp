@@ -20,12 +20,6 @@ namespace options {
         return *this;
     }
     
-    void CommandLineParser::parseArgs()
-    {
-        auto&  vm = VariablesMap::getInstance();
-    	vm.store(run());
-    }
-
     const std::vector<Option>& CommandLineParser::options() const
     {
         return parsedOptions;

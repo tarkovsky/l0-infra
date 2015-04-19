@@ -1,5 +1,5 @@
-#ifndef CMDLINE_H
-#define CMDLINE_H
+#ifndef CMDLINE_Sun_Apr_19_00_17_15_2015_H
+#define CMDLINE_Sun_Apr_19_00_17_15_2015_H
 
 #include "l0-infra/options/program_options/OptionsDescription.hpp"
 

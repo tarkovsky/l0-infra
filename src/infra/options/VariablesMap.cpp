@@ -15,7 +15,6 @@ namespace  options {
 		m[option.key] = option.value;
 	}
 
-
     void VariablesMap::store(const ParsedOptions& options)
     {       
         for (auto& var : options.options())
@@ -25,11 +24,14 @@ namespace  options {
             const std::string& option_name = var.key;
             if (option_name.empty()) continue;
 			
-			if(!options.description().find(option_name, var.hasValue))
-			    continue;
-
 			setMapValue(var, *this);
         }
+    }
+
+    void VariablesMap::parseArgs(int argc, const char** const argv
+                    , const OptionsDescription& desc)
+    {
+    	store(CommandLineParser(argc, argv, desc).run());
     }
 
 	VariablesMap& VariablesMap::getInstance()

@@ -2,7 +2,6 @@
 #include <l0-infra/options/program_options/detail/Cmdline.hpp>
 #include "l0-infra/options/program_options/OptionsDescription.hpp"
 #include "l0-infra/options/program_options/Option.hpp"
-#include <cassert>
 
 using namespace std;
 
@@ -50,8 +49,6 @@ namespace options { namespace detail {
 		
         vector<Option> Cmdline::run()
         {
-            assert(desc);
-
             vector<Option> result;
             for(auto& arg : args)
             {
@@ -105,7 +102,7 @@ namespace options { namespace detail {
 
                 bool tryFind(const OptionsDescription& desc)
                     {
-                        return foundOption = desc.find(name, false);
+                        return foundOption = desc.find(name);
                     }
 
                 void fillOption(vector<Option>& result)

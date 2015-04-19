@@ -33,8 +33,7 @@ FIXTURE(OptionTest)
 
         SCOPE_EXIT([=] { delete [] argv; });
 
-        CommandLineParser(options.size(), argv, desc).parseArgs();
-		varMap = VariablesMap::getInstance();
+		varMap.parseArgs(options.size(), argv, desc);
     }
 
     template <typename T>

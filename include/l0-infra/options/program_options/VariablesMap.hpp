@@ -3,27 +3,27 @@
 
 #include <string>
 #include <map>
-#include <set>
-#include <memory>
 
 namespace options {
 
+    struct OptionsDescription;
     struct ParsedOptions;
 
     struct  VariablesMap : std::map<std::string, std::string>
     {
-    private:
-        using super = std::map<std::string, std::string>;
-
-    public:
 		static VariablesMap&  getInstance();
 
-		void store(const ParsedOptions& options);
+		void parseArgs(int argc, const char** const argv
+		                , const OptionsDescription& desc);
 
         const std::string& operator[](const std::string& name) const;
 
         void clear(); 
         bool has(const std::string& name) const;
+
+    private:
+        using super = std::map<std::string, std::string>;
+		void store(const ParsedOptions& options);
 	};
 }
 

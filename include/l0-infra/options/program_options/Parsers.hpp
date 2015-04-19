@@ -21,14 +21,10 @@ namespace options {
         CommandLineParser(int argc, const char** const argv
                           , const OptionsDescription& desc);
 
-        void parseArgs();
-
+        const ParsedOptions& run();
     private:
         OVERRIDE(const std::vector<Option>& options() const);
         OVERRIDE(const OptionsDescription& description() const);
-
-    private:
-        const ParsedOptions& run();
 
     private:
         std::vector<Option> parsedOptions;
