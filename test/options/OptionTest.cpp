@@ -1,18 +1,19 @@
 #include "magellan/magellan.hpp"
 #include "l0-infra/options/ProgramOptions.hpp"
 
-using namespace options;
+USING_OPTIONS_NS
+
 using namespace hamcrest;
 
 FIXTURE(OptionTest)
 {
     OptionsDescription desc {"Allowed options"};
-	VariablesMap& varMap = VariablesMap::getInstance();
+    VariablesMap& varMap = VariablesMap::getInstance();
 
-	void give_option_config(std::map<std::string, std::string>&& tbl)
-	{
+    void give_option_config(std::map<std::string, std::string>&& tbl)
+    {
         desc.add(std::move(tbl));
-		varMap.clear();
+        varMap.clear();
     }
 
     static const char** to_argv(std::vector<const char*>&& options)

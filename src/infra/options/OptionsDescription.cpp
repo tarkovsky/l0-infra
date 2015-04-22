@@ -2,6 +2,7 @@
 #include "l0-infra/options/program_options/Parsers.hpp"
 #include <algorithm>
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -39,6 +40,11 @@ const std::string& OptionDescription::getLongName() const
     return longName;
 }
 
+const std::string OptionDescription::format() const
+{
+    return longName + "[" + shortName +"]";
+}
+
 OptionDescription& OptionDescription::setName(const std::string& name)
 {
     auto n = name.find(',');
@@ -57,18 +63,6 @@ OptionDescription& OptionDescription::setName(const std::string& name)
 const std::string& OptionDescription::getDescription() const
 {
     return description;
-}
-
-std::string OptionDescription::formatName() const
-{
-    if (!shortName.empty())
-    {
-        return longName.empty() 
-            ? shortName 
-            : string(shortName).append(" [ --").
-            append(longName).append(" ]");
-    }
-    return string("--").append(longName);
 }
 
 OptionsDescription::OptionsDescription(const std::string& caption)
@@ -92,6 +86,19 @@ const OptionDescription* OptionsDescription::find(const std::string& name) const
         if(one->match(name)) return one.get();
     }
     return 0;
+}
+
+using namespace std;
+
+ostream& operator<<(ostream& os, const OptionsDescription& desc)
+{
+    for (auto var : desc.m_options)
+    {
+        os<<left<<std::setw(20)<<var->format()<<":"
+          <<std::setw(40)<<var->getDescription()<<endl;
+    }
+    return os;
+
 }
 
 OPTIONS_NS_END

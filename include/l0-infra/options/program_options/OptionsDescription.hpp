@@ -19,10 +19,7 @@ struct OptionDescription
     const std::string& getKey(const std::string& option) const;
     const std::string& getLongName() const;
     const std::string& getDescription() const;
-
-    std::string formatName() const;
-    std::string formatParameter() const;
-
+    const std::string format() const;
 private:
     
     OptionDescription& setName(const std::string& name);
@@ -39,7 +36,6 @@ struct OptionsDescription
     friend std::ostream& operator<<(std::ostream& os, 
                                     const OptionsDescription& desc);
     const OptionDescription* find(const std::string& name) const;
-    void print(std::ostream& os, unsigned width = 0) const;
 
 private:
     enum { default_line_length = 80};
