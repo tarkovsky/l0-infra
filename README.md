@@ -1,6 +1,6 @@
 # l0-infra
 
-It's an infrastructure for universal C/C++ framework.
+l0-infra is an infrastructure for universal C/C++ framework.
 
 * [l0-infra](http://gitlab.com/horance/l0-infra)
 
