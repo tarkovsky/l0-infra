@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <iomanip>
+#include <l0-infra/std/String.h>
 
 using namespace std;
 
@@ -42,7 +43,7 @@ const std::string& OptionDescription::getLongName() const
 
 const std::string OptionDescription::format() const
 {
-    return longName + "[" + shortName +"]";
+    return "[--" + longName + "|" + shortName +"]";
 }
 
 OptionDescription& OptionDescription::setName(const std::string& name)
@@ -50,12 +51,12 @@ OptionDescription& OptionDescription::setName(const std::string& name)
     auto n = name.find(',');
     if (n != string::npos)
     {
-        longName = name.substr(0, n);
-        shortName = '-' + name.substr(n+1,1);
+        longName = stdext::trim(name.substr(0, n));
+        shortName = '-' + stdext::trim(name.substr(n+1));
     }
     else
     {
-        longName = name;
+        longName = stdext::trim(name);
     }
     return *this;
 }
@@ -92,10 +93,24 @@ using namespace std;
 
 ostream& operator<<(ostream& os, const OptionsDescription& desc)
 {
-    for (auto var : desc.m_options)
+    const string usage("usage: ");
+    os<<setfill('=')<<setw(80)<<""<<endl<<setfill(' ');
+    os<<usage<<desc.m_caption<<" ";
+    int i = 1;
+    for (auto& var : desc.m_options)
     {
-        os<<left<<std::setw(20)<<var->format()<<":"
-          <<std::setw(40)<<var->getDescription()<<endl;
+        os<<var->format()<<" ";
+        if((i++)% 4 == 0 )
+        {
+            os<<endl;
+            os<<setw(desc.m_caption.size() + usage.size())<<"";
+        }
+    }
+    os<<endl;
+    os<<setfill('=')<<setw(80)<<""<<endl<<setfill(' ');
+    for (auto& var : desc.m_options)
+    {
+        os<<"  "<<left<<setw(20)<<var->getLongName()<<setw(40)<<var->getDescription()<<endl;
     }
     return os;
 
