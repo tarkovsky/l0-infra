@@ -52,7 +52,7 @@ Dependences for test cases:
 
 ### l0-infra Developer
 
-TO see [MDK](https://gitloab.com/horance/mdk) README for details.
+TO see [MDK](https://gitlab.com/horance/mdk) README for details.
 
 ## Copyright
 Copyright (c) 2015-2020 Horance Liu. See LICENSE for details.
