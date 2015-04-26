@@ -185,18 +185,22 @@ std::string to_lower(const std::string& str)
 
 namespace
 {
-    const std::string space = " \n\r\t";
+    const std::string& space()
+    {
+        static const std::string s = " \n\r\t";
+        return s;
+    }
 }
 
 std::string ltrim(const std::string& str)
 {
-    auto begin = str.find_first_not_of(space);
+    auto begin = str.find_first_not_of(space());
     return begin == std::string::npos ? str : str.substr(begin);
 }
 
 std::string rtrim(const std::string& str)
 {
-    auto end = str.find_last_not_of(space);
+    auto end = str.find_last_not_of(space());
     return end == std::string::npos ? str : str.substr(0, end + 1);
 }
 

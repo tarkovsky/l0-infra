@@ -29,12 +29,6 @@ namespace  options {
     	store(CommandLineParser(argc, argv, desc).run());
     }
 
-	VariablesMap& VariablesMap::getInstance()
-	{
-		static VariablesMap map;
-		return map;
-	}
-
     void VariablesMap::clear()
     {
         super::clear();

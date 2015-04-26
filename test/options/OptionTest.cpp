@@ -8,7 +8,7 @@ using namespace hamcrest;
 FIXTURE(OptionTest)
 {
     OptionsDescription desc {"Allowed options"};
-    VariablesMap& varMap = VariablesMap::getInstance();
+    VariablesMap varMap;
 
     void give_option_config(std::map<std::string, std::string>&& tbl)
     {

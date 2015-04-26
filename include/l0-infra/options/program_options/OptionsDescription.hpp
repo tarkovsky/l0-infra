@@ -42,7 +42,7 @@ private:
     using DescPtr =  std::shared_ptr<OptionDescription>;
 
     std::string m_caption;
-    std::vector<DescPtr > m_options;
+    std::vector<DescPtr> m_options;
 };
 
 OPTIONS_NS_END

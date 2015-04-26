@@ -12,8 +12,6 @@ struct ParsedOptions;
 
 struct  VariablesMap : std::map<std::string, std::string>
 {
-    static VariablesMap&  getInstance();
-
     void parseArgs(int argc, const char** const argv
                    , const OptionsDescription& desc);
 
