@@ -19,10 +19,10 @@ Cmdline::Cmdline(int argc, const char** argv)
 
 void Cmdline::init(const vector<string>& args)
 {
-    this->args = args;        
+     this->args = args;
     desc= 0;
 }
-    
+
 void Cmdline::setDescription(const OptionsDescription& desc)
 {
     this->desc= &desc;
@@ -30,7 +30,7 @@ void Cmdline::setDescription(const OptionsDescription& desc)
 
 typedef std::vector<Option> (Cmdline::* style_parser)(const std::string&);
 
-bool Cmdline::tryAllParser(const std::string& arg, vector<Option>& result)
+void Cmdline::doAllParser(const std::string& arg, vector<Option>& result)
 {
     static style_parser style_parsers[] = {&Cmdline::parseLongOption
                                            , &Cmdline::parseShortOption};
@@ -41,31 +41,21 @@ bool Cmdline::tryAllParser(const std::string& arg, vector<Option>& result)
         if(next.empty()) continue;
 
         result.insert(result.begin(), next.begin(), next.end());
-        return true;
     }
-
-    return false;
 }
-		
+
 vector<Option> Cmdline::run()
 {
     vector<Option> result;
-    for(auto& arg : args)
+    for(const auto& arg : args)
     {
-        if (!tryAllParser(arg, result))
-        {
-            result.push_back(Option(arg, ""));
-        }
+         doAllParser(arg, result);
     }
     return result;
 }
 
 namespace
 {
-    inline bool isLongOption(const string& tok)
-    {
-        return tok.size() >= 3 && tok[0] == '-' && tok[1] == '-';
-    }
 
     DEFINE_ROLE(Tok)
     {
@@ -77,76 +67,87 @@ namespace
         LongTok(const string& tok):tok(tok){}
     private:
         OVERRIDE(void parse( string& name, string& adjacent) const)
-            {
-                auto  p = tok.find('=');
-                if (p != tok.npos)
-                {
-                    name = tok.substr(2, p-2);
-                    adjacent = tok.substr(p+1);
-                }
-                else
-                {
-                    name = tok.substr(2);
-                }
-            }
+        {
+             auto  p = tok.find('=');
+             if (p != tok.npos)
+             {
+                  name = tok.substr(2, p-2);
+                  adjacent = tok.substr(p);
+             }
+             else
+             {
+                  name = tok.substr(2);
+             }
+        }
     private:
         const string& tok;
     };
 
     struct BaseOptionParser
     {
-        BaseOptionParser(const Tok& init): foundOption(0)
-            {
-                init.parse(name, adjacent);
-            }
+         BaseOptionParser(const Tok& init, const OptionsDescription& desc ):
+              foundOption(0), desc(desc)
+         {
+              init.parse(name, adjacent);
+         }
 
-        bool tryFind(const OptionsDescription& desc)
-            {
-                return foundOption = desc.find(name);
-            }
+         bool tryFind()
+         {
+              foundOption = desc.find(name);
+              return foundOption != 0;
+         }
 
-        void fillOption(vector<Option>& result)
-            {
-                result.push_back(Option(foundOption->getLongName(), adjacent));
-            }
+         void addOption()
+         {
+              bool hasValue = (adjacent[0] == '=');
+              auto getValue =  [&]{adjacent.erase(adjacent.begin());
+                                   return adjacent;
+              };
+              result.push_back(Option(getName(), hasValue? getValue() : ""));
+              if(hasValue) adjacent.clear();
+         }
 
-        const OptionDescription* foundOption;		
-        string name;
-        string adjacent;		
+         const string& getName()
+         {
+              return foundOption ? foundOption->getLongName():name;
+         }
+
+         string name;
+         string adjacent;
+         vector<Option> result;
+    private:
+         const OptionsDescription& desc;
+         const OptionDescription* foundOption;
     };
 
 
     struct LongOptionParser : BaseOptionParser
     {
-        LongOptionParser(const string& tok):BaseOptionParser(LongTok(tok))
-            {
-
-            }
+         LongOptionParser(const string& tok, const OptionsDescription& desc)
+              :BaseOptionParser(LongTok(tok), desc)
+         {
+              isLongOption = (tok.size() >= 3
+                              && tok[0] == '-' && tok[1] == '-');
+         }
+         bool isLongOption;
     };
 }
 
 vector<Option> Cmdline::parseLongOption(const string& tok)
 {
-    vector<Option> result;
+     LongOptionParser parser(tok, *desc);
+     if (!parser.isLongOption) return parser.result;
 
-    if (!isLongOption(tok)) return result;
+     if(parser.tryFind())
+     {
+          parser.addOption();
+     }
 
-    LongOptionParser parser(tok);
-
-    if(parser.tryFind(*desc))
-    {
-        parser.fillOption(result);
-    }
-
-    return result;
+    return parser.result;
 }
 
 namespace
 {
-    bool isShortOption(const string& tok)
-    {
-        return tok.size() >= 2 && tok[0] == '-' && tok[1] != '-';
-    }
 
     struct ShortTok : Tok
     {
@@ -163,61 +164,44 @@ namespace
 
     struct ShortOptionParser : BaseOptionParser
     {
-        ShortOptionParser(const string& tok)
-            : BaseOptionParser(ShortTok(tok))
-            {
-            }
+         ShortOptionParser(const string& tok, const OptionsDescription& desc)
+              : BaseOptionParser(ShortTok(tok),desc)
+         {
+              isShortOption = (tok.size() >= 2
+                               && tok[0] == '-' && tok[1] != '-');
+         }
 
-        bool finished() const
-            {
-                return adjacent.empty();
-            }
+         bool finished() const
+         {
+              return adjacent.empty();
+         }
 
-        void addOption(vector<Option>& result)
-            {
-                bool hasValue = (adjacent[0] == '=');
-                auto value = [&]{adjacent.erase(adjacent.begin());
-                                 return adjacent;
-                };
-                result.push_back(Option(foundOption? foundOption->getLongName(): name
-                                        , hasValue? value() : ""));
-                if(hasValue) adjacent.clear();
-            }
+         void goNext()
+         {
+              name = string("-") + adjacent[0];
+              adjacent.erase(adjacent.begin());
+         }
 
-        void goNext()
-            {
-                name = string("-") + adjacent[0];
-                adjacent.erase(adjacent.begin());
-            }
+         bool isShortOption;
     };
 }
 
 vector<Option> Cmdline::parseShortOption(const string& tok)
 {
-    vector<Option> result;
-    if (!isShortOption(tok)) return result;
+    ShortOptionParser parser(tok, *desc);
 
-    ShortOptionParser parser(tok);
+    if (!parser.isShortOption)return parser.result;
 
     while(true)
     {
-        if(!parser.tryFind(*desc))
+        if(parser.tryFind())
         {
-            if(parser.finished())
-            {
-                parser.addOption(result);
-                break;
-            }
-            parser.goNext();
+            parser.addOption();
         }
-        else
-        {
-            parser.addOption(result);
-            if(parser.finished()) return result;
-            parser.goNext();
-        }
+        if(parser.finished()) break;
+        parser.goNext();
     }
-    return result;
+    return parser.result;
 }
 
 OPTIONS_NS_END

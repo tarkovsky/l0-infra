@@ -19,7 +19,7 @@ private:
     void init(const std::vector<std::string>& args);
     std::vector<Option> parseLongOption(const std::string& arg);
     std::vector<Option> parseShortOption(const std::string& arg);
-    bool tryAllParser(const std::string& arg, std::vector<Option>& result);
+    void doAllParser(const std::string& arg, std::vector<Option>& result);
 
 private:
     std::vector<std::string> args;
