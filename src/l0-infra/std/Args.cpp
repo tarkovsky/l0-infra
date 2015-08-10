@@ -8,7 +8,7 @@ Args::Args(const std::vector<std::string>& options)
 {
     for (size_t i=0; i<m_argc; i++)
     {
-        m_argv[i] = new char[options[i].size()];
+        m_argv[i] = new char[options[i].size() + 1];
         ::strcpy((char*)m_argv[i], options[i].c_str());
     }
 }
