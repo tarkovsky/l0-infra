@@ -1,4 +1,4 @@
-#include <magellan/magellan.hpp>
+#include "magellan/magellan.hpp"
 
 int main(int argc, char** argv)
 {
