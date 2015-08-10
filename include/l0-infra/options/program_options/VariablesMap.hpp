@@ -10,19 +10,23 @@ OPTIONS_NS_BEGIN
 struct OptionsDescription;
 struct ParsedOptions;
 
-struct  VariablesMap : std::map<std::string, std::string>
+struct VariablesMap
 {
-    void parseArgs(int argc, const char** const argv
-                   , const OptionsDescription& desc);
+    void clear();
+    void parseArgs( int argc, const char** argv, const OptionsDescription& desc);
 
-    const std::string& operator[](const std::string& name) const;
-
-    void clear(); 
     bool has(const std::string& name) const;
 
+    const std::string& operator[](const std::string&) const;
+    std::string& operator[](const std::string&);
+
+    void dump() const;
+
 private:
-    using super = std::map<std::string, std::string>;
     void store(const ParsedOptions& options);
+
+private:
+    std::map<std::string, std::string> options;
 };
 
 OPTIONS_NS_END

@@ -18,10 +18,11 @@ DEFINE_ROLE(ParsedOptions)
 
 struct CommandLineParser : private Cmdline, ParsedOptions{
 
-    CommandLineParser(int argc, const char** const argv
-                      , const OptionsDescription& desc);
+    CommandLineParser( int argc, const char** argv
+                     , const OptionsDescription& desc);
 
     const ParsedOptions& run();
+
 private:
     OVERRIDE(const std::vector<Option>& options() const);
     OVERRIDE(const OptionsDescription& description() const);

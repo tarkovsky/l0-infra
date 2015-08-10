@@ -18,7 +18,7 @@ FIXTURE(OptionTest)
 
     static const char** to_argv(std::vector<const char*>&& options)
     {
-        const char** argv = new const char*[options.size()];
+        auto argv = new const char*[options.size()];
 
         for (auto i = 0; i < options.size(); i++)
         {

@@ -20,10 +20,11 @@ struct OptionDescription
     const std::string& getLongName() const;
     const std::string& getDescription() const;
     const std::string format() const;
-private:
-    
-    OptionDescription& setName(const std::string& name);
 
+private:
+    void setName(const std::string& name);
+
+private:
     std::string shortName, longName, description;
 };
 
@@ -38,8 +39,7 @@ struct OptionsDescription
     const OptionDescription* find(const std::string& name) const;
 
 private:
-    enum { default_line_length = 80};
-    using DescPtr =  std::shared_ptr<OptionDescription>;
+    using DescPtr = std::shared_ptr<OptionDescription>;
 
     std::string m_caption;
     std::vector<DescPtr> m_options;

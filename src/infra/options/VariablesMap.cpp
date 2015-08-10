@@ -1,49 +1,54 @@
 #include "l0-infra/options/program_options/VariablesMap.hpp"
 #include "l0-infra/options/program_options/Parsers.hpp"
 #include "l0-infra/options/program_options/OptionsDescription.hpp"
+#include <iostream>
 
-namespace  options {
+OPTIONS_NS_BEGIN
 
-	void setMapValue(const Option& option, std::map<std::string, std::string>& m)
-	{
-		m[option.key()] = "";
-
-		if(option.value().empty()) return;
-		m[option.key()] = option.value();
-	}
-
-    void VariablesMap::store(const ParsedOptions& options)
-    {       
-        for (auto& var : options.options())
+inline void VariablesMap::store(const ParsedOptions& options)
+{
+    for (auto& option : options.options())
+    {
+        if (!option.key().empty())
         {
-            const std::string& option_name = var.key();
-            if (option_name.empty()) continue;
-			
-			setMapValue(var, *this);
+            this->options[option.key()] = option.value();
         }
     }
+}
 
-    void VariablesMap::parseArgs(int argc, const char** const argv
-                    , const OptionsDescription& desc)
-    {
-    	store(CommandLineParser(argc, argv, desc).run());
-    }
+void VariablesMap::parseArgs(int argc, const char** argv, const OptionsDescription& desc)
+{
+    store(CommandLineParser(argc, argv, desc).run());
+}
 
-    void VariablesMap::clear()
-    {
-        super::clear();
-    }
+void VariablesMap::clear()
+{
+    options.clear();
+}
 
-    const std::string& VariablesMap::operator[](const std::string& name) const
-    {
-        static std::string empty;
+const std::string& VariablesMap::operator[](const std::string& name) const
+{
+    return const_cast<VariablesMap&>(*this)[name];
+}
 
-        auto i = super::find(name);
-        return i == super::end() ? empty : i->second;
-    }
-    
-    bool VariablesMap::has(const std::string& name) const
+std::string& VariablesMap::operator[](const std::string& name)
+{
+    return options[name];
+}
+
+bool VariablesMap::has(const std::string& name) const
+{
+    return options.count(name) != 0;
+}
+
+void VariablesMap::dump() const
+{
+    for (auto& entry : options)
     {
-    	return super::count(name) != 0;
+        printf("\n=============================================================\n");
+        std::cout << entry.first << "=" << entry.second << std::endl;
+        printf("\n=============================================================\n");
     }
 }
+
+OPTIONS_NS_END

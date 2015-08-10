@@ -8,19 +8,13 @@ using namespace std;
 OPTIONS_NS_BEGIN
 
 Cmdline::Cmdline(const vector<string>& args)
+  : args(args), desc(0)
 {
-    init(args);
 }
 
 Cmdline::Cmdline(int argc, const char** argv)
+ : args(argv+1, argv+argc+!argc), desc(0)
 {
-    init(vector<string>(argv+1, argv+argc+!argc));
-}
-
-void Cmdline::init(const vector<string>& args)
-{
-     this->args = args;
-    desc= 0;
 }
 
 void Cmdline::setDescription(const OptionsDescription& desc)

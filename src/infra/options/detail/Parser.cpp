@@ -5,12 +5,10 @@
 
 OPTIONS_NS_BEGIN
 
-CommandLineParser::	CommandLineParser(int argc, const char** argv
-                                      , const OptionsDescription& desc)
-    : Cmdline(argc, argv)
-    , desc(desc)
+CommandLineParser::	CommandLineParser
+    ( int argc, const char** argv, const OptionsDescription& desc)
+    : Cmdline(argc, argv), desc(desc)
 {
-
 }
 
 const ParsedOptions&  CommandLineParser::run()

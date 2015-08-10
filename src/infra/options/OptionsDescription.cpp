@@ -9,9 +9,23 @@ using namespace std;
 
 OPTIONS_NS_BEGIN
 
+inline void OptionDescription::setName(const std::string& name)
+{
+    auto n = name.find(',');
+    if (n != string::npos)
+    {
+        longName = stdext::trim(name.substr(0, n));
+        shortName = '-' + stdext::trim(name.substr(n+1));
+    }
+    else
+    {
+        longName = stdext::trim(name);
+    }
+}
+
 OptionDescription::OptionDescription
-( const std::string& name
-  , const std::string& description)
+    ( const std::string& name
+    , const std::string& description)
     : description(description)
 {
     setName(name);
@@ -19,16 +33,7 @@ OptionDescription::OptionDescription
 
 bool OptionDescription::match(const std::string& option) const
 {
-    if (longName == option)
-    {
-        return true;
-    }
-
-    if (shortName == option)
-    {
-        return true;
-    }
-    return false;
+    return option == longName || option == shortName;
 }
 
 const std::string& OptionDescription::getKey(const std::string& option) const
@@ -44,21 +49,6 @@ const std::string& OptionDescription::getLongName() const
 const std::string OptionDescription::format() const
 {
     return "[--" + longName + "|" + shortName +"]";
-}
-
-OptionDescription& OptionDescription::setName(const std::string& name)
-{
-    auto n = name.find(',');
-    if (n != string::npos)
-    {
-        longName = stdext::trim(name.substr(0, n));
-        shortName = '-' + stdext::trim(name.substr(n+1));
-    }
-    else
-    {
-        longName = stdext::trim(name);
-    }
-    return *this;
 }
 
 const std::string& OptionDescription::getDescription() const

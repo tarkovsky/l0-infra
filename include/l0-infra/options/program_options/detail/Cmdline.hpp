@@ -5,7 +5,7 @@
 
 OPTIONS_NS_BEGIN
 
-struct  Option;
+struct Option;
 
 struct Cmdline
 {
