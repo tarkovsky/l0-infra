@@ -1,5 +1,6 @@
 #include "magellan/magellan.hpp"
 #include "l0-infra/options/ProgramOptions.hpp"
+#include "l0-infra/std/Args.h"
 
 USING_OPTIONS_NS
 
@@ -16,25 +17,10 @@ FIXTURE(OptionTest)
         varMap.clear();
     }
 
-    static const char** to_argv(std::vector<const char*>&& options)
+    void when_parse_program_options(const std::vector<std::string>& options)
     {
-        auto argv = new const char*[options.size()];
-
-        for (auto i = 0; i < options.size(); i++)
-        {
-            argv[i] = options[i];
-        }
-
-        return argv;
-    }
-
-    void when_parse_program_options(std::vector<const char*>&& options)
-    {
-        auto argv = to_argv(std::move(options));
-
-        SCOPE_EXIT([=] { delete [] argv; });
-
-		varMap.parseArgs(options.size(), argv, desc);
+        stdext::Args args(options);
+		varMap.parseArgs(args.argc(), args.argv(), desc);
     }
 
     template <typename T>
