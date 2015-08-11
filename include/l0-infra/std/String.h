@@ -3,6 +3,7 @@
 
 #include <l0-infra/std/TypeName.h>
 #include <sstream>
+#include <vector>
 #include <stdexcept>
 #include <stddef.h>
 
