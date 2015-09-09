@@ -1,6 +1,8 @@
 # l0-infra
 
-[l0-infra](http://gitlab.com/horance/l0-infra) is an infrastructure for universal C/C++ framework.
+[l0-infra](https://github.com/horance-liu/l0-infra) is an infrastructure for universal C/C++ framework.
+
+## Build
 
 Supported Platform:
 * [MAC OS X] supported
@@ -13,54 +15,8 @@ Supported Compilers:
 * [MSVC] not supported.
 
 Dependences for test cases:
-* [Magellan](http://gitlab.com/horance/magellan).
-
-## Installation
-
-### Install CMake:
-
-```bash
-$ sudo apt-get install cmake
-```
-  
-### Install l0-infra 
-
-```bash
-$ git clone https://gitlab.com/horance/l0-infra.git
-$ cd l0-infra
-$ mkdir build
-$ cd build
-$ cmake ..
-$ make ..
-$ sudo make install
-$ sudo ldconfig
-```
-
-### Install Magellan:
-
-```bash
-$ git clone https://gitlab.com/horance/magellan.git
-$ cd magellan
-$ mkdir build
-$ cd build
-$ cmake ..
-$ make
-$ sudo make install
-$ sudo ldconfig
-```
-
-### Test l0-infra
-
-```bash
-$ cd build
-$ cmake -DENABLE_TEST=on ..
-$ make
-$ test/l0-infra-test    
-```
-
-### l0-infra Developer
-
-TO see [MDK](https://gitloab.com/horance/mdk) README.md for details.
+* [Hamcrest](https://github.com/horance-liu/hamcrest)
+* [Magellan](https://github.com/horance-liu/magellan).
 
 ## Copyright
 Copyright (c) 2015-2020 Horance Liu. See LICENSE for details.
