@@ -8,4 +8,4 @@ FILE(GLOB_RECURSE all_files
 *.C)
 
 add_executable(l0-infra-test  ${all_files})
-target_link_libraries(l0-infra-test magellan l0-infra)
+target_link_libraries(l0-infra-test hamcrest magellan l0-infra)
